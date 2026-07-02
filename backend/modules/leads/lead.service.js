@@ -76,4 +76,44 @@ export const metaLeadService = async(
   metaLead
 )=>{
  //to be constructed 
-}
+};
+
+export const viewLeadsService=async(
+  employeeId,
+  clientId,
+  role
+)=>{
+  let query;
+  let value=[];
+
+  if(role === "manager"){
+    query=
+    `select leads.*,employees.employee_name 
+    from leads
+    inner join lead_assign
+    on leads.lead_id=lead_assign.lead_id
+    inner join employees
+    on lead_assign.employee_id=employees.employee_id
+    where leads.client_id=?`;
+    value=[clientId];
+  }
+  else{
+    query=
+    `select leads.*
+    from leads 
+    inner join lead_assign
+    on leads.lead_id=lead_assign.lead_id
+    where leads.client_id=?
+    and lead_assign.employee_id=? `;
+
+    value=[clientId,employeeId];
+  }
+
+  const [row]=await db.query(query,value);
+
+  return{
+    success:true,
+    message:"leads fetched successfully",
+    data:row
+  };
+};
