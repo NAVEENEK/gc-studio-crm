@@ -1,4 +1,4 @@
-import { manualLeadService,viewLeadsService } from "./lead.service.js";
+import { manualLeadService,viewLeadsService,leadInfoService } from "./lead.service.js";
 
 export const manualLead=async(req,res)=>{
  try{
@@ -20,7 +20,10 @@ export const manualLead=async(req,res)=>{
     email,
     interestedService
   );
-  return res.json(result);
+  if(!result.success){
+    return res.status(result.statusCode).json(result);
+  }
+  return res.status(201).json(result);
  }catch(error){
   console.error("manual lead error:",error);
 
@@ -40,13 +43,44 @@ export const viewLeads=async(req,res)=>{
     clientId,
     role
   );
-  return res.json(result);
+  if(!result.success){
+    return res.status(result.statusCode).json
+      (result);
+  }
+  return res.status(200).json(result);
+
+
  }catch(error){
   console.error("view leads error:",error);
 
-  return res.json(500).json({
+  return res.status(500).json({
     success:false,
     message:"internal server error"
   });
  }
+};
+
+export const leadInfo=async(req,res)=>{
+  try{
+    const{leadId}=req.params;
+    const{employeeId,clientId,role}=req.user;
+
+    const result= await leadInfoService(
+      leadId,
+      clientId,
+      employeeId,
+      role
+    );
+    if(!result.success){
+      return res.status(result.statusCode).json(result);
+    }
+    return res.status(200).json(result);
+  }catch(error){
+    console.error("Lead info controller error:",error);
+
+    return res.status(500).json({
+      success:false,
+      message:"Internal server error"
+    });
+  }
 };

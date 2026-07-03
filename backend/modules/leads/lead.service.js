@@ -97,7 +97,7 @@ export const viewLeadsService=async(
     where leads.client_id=?`;
     value=[clientId];
   }
-  else{
+  else if(role==="employee"){
     query=
     `select leads.*
     from leads 
@@ -107,13 +107,87 @@ export const viewLeadsService=async(
     and lead_assign.employee_id=? `;
 
     value=[clientId,employeeId];
+  }else{
+    return{
+      success:false,
+      statusCode:403,
+      message:"Unautherised access"
+    };
   }
 
   const [row]=await db.query(query,value);
 
+  if(row.length===0){
+    return{
+      success:false,
+      statusCode:404,
+      message:"leads not found"
+    };
+  }
+
   return{
     success:true,
     message:"leads fetched successfully",
-    data:row
+    data:row[0]
   };
+};
+
+export const leadInfoService=async(
+  leadId,
+  clientId,
+  employeeId,
+  role
+)=>{
+    let query;
+    let value=[];
+
+    if(role === "manager"){
+      query=
+      `select l.*,
+      la.*,
+      e.employee_name,e.phone_number,
+      e.email
+      from leads as l
+      inner join lead_assign as la
+      on l.lead_id=la.lead_id
+      inner join employees as e
+      on la.employee_id=e.employee_id
+      where l.client_id=?
+      and l.lead_id=?
+      `;
+      value=[clientId,leadId];
+    }else if(role==="employee"){
+      query=
+      `
+      select 
+      l.*
+      from leads as l
+      inner join lead_assign as la
+      on l.lead_id=la.lead_id
+      where la.employee_id=? 
+      and l.lead_id=?
+      and l.client_id=?
+      `;
+      value=[employeeId,leadId,clientId];
+    }else{
+      return{
+        success:false,
+        statusCode:403,
+        message:"Unauthorized access"
+      };
+    }
+    const [rows]=await db.query(query,value);
+
+    if(rows.length===0){
+      return{
+        success:false,
+        statusCode:404,
+        message:"lead not found"
+      };
+    }
+
+    return{
+      success:true,
+      lead:rows[0]
+    };
 };
