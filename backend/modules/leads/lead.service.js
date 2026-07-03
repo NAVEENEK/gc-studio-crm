@@ -115,7 +115,7 @@ export const viewLeadsService=async(
     };
   }
 
-  const [row]=await db.query(query,value);
+  const [rows]=await db.query(query,value);
 
   if(row.length===0){
     return{
@@ -128,7 +128,7 @@ export const viewLeadsService=async(
   return{
     success:true,
     message:"leads fetched successfully",
-    data:row[0]
+    data:rows[0]
   };
 };
 
@@ -190,4 +190,35 @@ export const leadInfoService=async(
       success:true,
       lead:rows[0]
     };
+};
+
+export const changeStatusService=async(
+  leadId,
+  employeeId,
+  role,
+  status
+)=>{
+  const [result]=await db.query(
+    `update leads as l
+    join lead_assign as la
+    on l.lead_id=la.lead_id
+    set l.lead_status=?
+    where l.lead_id=?
+    and la.employee_id=?`,
+    [status,leadId,employeeId]
+  );
+
+  if(result.affectedRows === 0){
+    return{
+      success:false,
+      statusCode:404,
+      message:"lead not found or you are not assigned to this lead"
+    };
+  }
+
+  return{
+    success:true,
+    statusCode:200,
+    message:"lead status updated"
+  };
 };
