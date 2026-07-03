@@ -12,6 +12,7 @@ export const employeeLoginService=async(
   if(employeeRows.length === 0){
     return{
       success:false,
+      statusCode:404,
       message:"employee not found"
     };
   }
@@ -25,12 +26,14 @@ export const employeeLoginService=async(
   if(!isPasswordMatch){
     return{
       success:false,
+      statusCode:401,
       message:"invalid password"
     };
   }
   if(employee.employee_status !== 'active'){
    return{
     success:false,
+    statusCode:403,
     message:"inactive employee"
    };
   }
@@ -74,6 +77,7 @@ export const agencyLoginService=async(
   if(userRows.length===0){
     return{
       success:false,
+      statusCode:404,
       message:"agency user not found"
     };
   }
@@ -87,6 +91,7 @@ export const agencyLoginService=async(
   if(!isPasswordMatch){
     return{
       success:false,
+      statusCode:401,
       message:"Invalid password"
     };
   }
@@ -94,6 +99,7 @@ export const agencyLoginService=async(
   if(user.user_status !== 'active'){
     return{
       success:false,
+      statusCode:403,
       message:"inactive user"
     };
   }
