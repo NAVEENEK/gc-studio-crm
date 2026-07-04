@@ -222,3 +222,83 @@ export const changeStatusService=async(
     message:"lead status updated"
   };
 };
+
+export const assignEmployeeService=async(
+  leadId,
+  employeeId,
+)=>{
+  //validate lead exists
+  const [leadRows]=await db.query(
+    `select lead_id
+    from leads
+    where lead_id=?`,
+    [leadId]
+  );
+
+  if(leadRows.length===0){
+    return{
+      success:false,
+      statusCode:404,
+      message:"Lead not found"
+    };
+  }
+
+  //validate employee exists
+  const[employeeRows]=await db.query(
+    `select employee_id 
+    from employees
+    where employee_id=?`,
+    [employeeId]
+  );
+
+  if(employeeRows.length===0){
+    return{
+      success:false,
+      statusCode:404,
+      message:"Employee not found"
+    };
+  }
+
+  const connection= await db.getConnection();
+
+  try{
+    await connection.beginTransaction();
+
+    //close the current active assignment if any
+    await connection.query(
+      `update lead_assign
+      set unassign_at = now()
+      where lead_id =?
+      and unassign_at is null`,
+      [leadId]
+    );
+
+    //create the new assignment
+    await connection.query(
+      `insert into lead_assign
+      (lead_id,employee_id)
+      values (?,?)`,
+      [leadId,employeeId]
+    );
+
+    //update the lead status
+    await connection.query(
+      `update leads
+      set lead_status ='assigned'
+      where lead_id=?`,
+      [leadId]
+    );
+    await connection.commit();
+
+    return{
+      success:true,
+      statusCode:200,
+      message:"Lead assigned successfully"
+    };
+  }catch(error){
+    await connection.rollback();
+    throw error;
+  }finally{
+    connection.release();
+  }
+};
