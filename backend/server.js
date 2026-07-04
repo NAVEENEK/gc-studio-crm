@@ -10,6 +10,10 @@ app.use("/auth",authRoutes);
 
 app.use("/leads",leadRoutes);
 
+app.get("/", (req, res) => {
+  res.send("GC Studio Backend is running 🚀");
+});
+
 app.listen(process.env.PORT,()=>{
   console.log("server runing");
 });
