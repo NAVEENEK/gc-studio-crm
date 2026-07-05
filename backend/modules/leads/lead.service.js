@@ -35,6 +35,7 @@ const createLeadService =async(leadData)=>{
   );
   return {
     success:true,
+    statusCode:200,
     message:"lead created successfully",
     leadId:result.insertId
   };
@@ -57,6 +58,7 @@ export const manualLeadService= async(
   if(campaignRow.length === 0){
     return{
       success:false,
+      statusCode:404,
       message:"campaign not found"
     };
   }
@@ -127,6 +129,7 @@ export const viewLeadsService=async(
 
   return{
     success:true,
+    statusCode:200,
     message:"leads fetched successfully",
     data:rows[0]
   };
@@ -188,6 +191,7 @@ export const leadInfoService=async(
 
     return{
       success:true,
+      statusCode:200,
       lead:rows[0]
     };
 };
@@ -198,23 +202,50 @@ export const changeStatusService=async(
   role,
   status
 )=>{
-  const [result]=await db.query(
-    `update leads as l
-    join lead_assign as la
-    on l.lead_id=la.lead_id
-    set l.lead_status=?
-    where l.lead_id=?
-    and la.employee_id=?`,
-    [status,leadId,employeeId]
-  );
 
-  if(result.affectedRows === 0){
+  const [leadRows]=await db.query(
+    `select lead_id
+    from leads
+    where lead_id=?`,
+    [leadId]
+  );
+  if(leadRows.length===0){
     return{
       success:false,
       statusCode:404,
-      message:"lead not found or you are not assigned to this lead"
+      message:"lead not found"
     };
   }
+
+  const [employeeRows]=await db.query(
+    `select employee_id 
+    from lead_assign 
+    where lead_id=?
+    and employee_id=?
+    and unassign_at is NULL `,
+    [leadId,employeeId]
+  );
+  if(employeeRows.length===0){
+    return{
+      success:false,
+      statusCode:403,
+      message:"only assigned employee can change status"
+    };
+  }
+
+  const [result]=await db.query(
+    `update leads
+    set lead_status=?
+    where lead_id=?`,
+    [status,leadId]
+  );
+  if (result.affectedRows === 0) {
+  return {
+    success: false,
+    statusCode: 500,
+    message: "Failed to update lead status"
+  };
+}
 
   return{
     success:true,
@@ -301,4 +332,74 @@ export const assignEmployeeService=async(
   }finally{
     connection.release();
   }
+};
+
+export const updateLeadService=async(
+  employeeId,
+  leadId,
+  leadName,
+  phoneNumber,
+  email,
+  interestedService,
+)=>{
+  //validate the lead exist
+  const [leadRows]= await db.query(
+    `select lead_id
+    from leads
+    where lead_id=?`,
+    [leadId]
+  );
+  if(leadRows.length===0){
+    return{
+      success:false,
+      statusCode:404,
+      message:"lead not found"
+    };
+  }
+
+  //valide the lead update requested employee, whether he is assigned one or not  
+  const [employeeRows]=await db.query(
+    `
+    select employee_id 
+    from lead_assign
+    where employee_id=?
+    and lead_id=?
+    and unassign_at is NULL
+    `,
+    [employeeId,leadId]
+  );
+
+  if(employeeRows.length===0){
+    return{
+      success:false,
+      statusCode:403,
+      message:"you are not assigned to this lead"
+    };
+  }
+
+  const [result]=await db.query(
+    `
+    update leads 
+    set 
+    lead_name =?,
+    phone_number =?,
+    email =?,
+    interested_service =?
+    where lead_id=?`,
+    [leadName,phoneNumber,email,interestedService,leadId]
+  );
+  if (result.affectedRows === 0) {
+  return {
+    success: false,
+    statusCode: 500,
+    message: "Failed to update lead"
+  };
+}
+
+  return{
+    success:true,
+    statusCode:200,
+    message:"lead updated successfully"
+  };
+
 };
