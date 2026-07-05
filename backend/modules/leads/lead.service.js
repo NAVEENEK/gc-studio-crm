@@ -199,7 +199,6 @@ export const leadInfoService=async(
 export const changeStatusService=async(
   leadId,
   employeeId,
-  role,
   status
 )=>{
 
@@ -252,86 +251,6 @@ export const changeStatusService=async(
     statusCode:200,
     message:"lead status updated"
   };
-};
-
-export const assignEmployeeService=async(
-  leadId,
-  employeeId,
-)=>{
-  //validate lead exists
-  const [leadRows]=await db.query(
-    `select lead_id
-    from leads
-    where lead_id=?`,
-    [leadId]
-  );
-
-  if(leadRows.length===0){
-    return{
-      success:false,
-      statusCode:404,
-      message:"Lead not found"
-    };
-  }
-
-  //validate employee exists
-  const[employeeRows]=await db.query(
-    `select employee_id 
-    from employees
-    where employee_id=?`,
-    [employeeId]
-  );
-
-  if(employeeRows.length===0){
-    return{
-      success:false,
-      statusCode:404,
-      message:"Employee not found"
-    };
-  }
-
-  const connection= await db.getConnection();
-
-  try{
-    await connection.beginTransaction();
-
-    //close the current active assignment if any
-    await connection.query(
-      `update lead_assign
-      set unassign_at = now()
-      where lead_id =?
-      and unassign_at is null`,
-      [leadId]
-    );
-
-    //create the new assignment
-    await connection.query(
-      `insert into lead_assign
-      (lead_id,employee_id)
-      values (?,?)`,
-      [leadId,employeeId]
-    );
-
-    //update the lead status
-    await connection.query(
-      `update leads
-      set lead_status ='assigned'
-      where lead_id=?`,
-      [leadId]
-    );
-    await connection.commit();
-
-    return{
-      success:true,
-      statusCode:200,
-      message:"Lead assigned successfully"
-    };
-  }catch(error){
-    await connection.rollback();
-    throw error;
-  }finally{
-    connection.release();
-  }
 };
 
 export const updateLeadService=async(
@@ -403,3 +322,113 @@ export const updateLeadService=async(
   };
 
 };
+
+export const assignEmployeeService=async(
+  leadId,
+  employeeId,
+)=>{
+  //validate lead exists
+  const [leadRows]=await db.query(
+    `select lead_id,client_id
+    from leads
+    where lead_id=?`,
+    [leadId]
+  );
+
+  if(leadRows.length===0){
+    return{
+      success:false,
+      statusCode:404,
+      message:"Lead not found"
+    };
+  }
+  const clientId=leadRows[0].client_id;
+
+  //validate employee exists and belong to same client
+  const[employeeRows]=await db.query(
+    `select employee_id,client_id
+    from employees
+    where employee_id=?
+    and client_id=?
+    and employee_role="employee"`,
+    [employeeId,clientId]
+  );
+
+  if(employeeRows.length===0){
+    return{
+      success:false,
+      statusCode:404,
+      message:"Employee not found"
+    };
+  }
+   // check current active assignment
+  const [assignedRows]= await db.query(
+    `select employee_id 
+    from lead_assign
+    where lead_id=?
+    and unassign_at is NULL`,
+    [leadId]
+  );
+  if(assignedRows.length>0 &&
+    assignedRows[0].employee_id === employeeId){
+    return{
+      success:false,
+      statusCode:409,
+      message:"Lead is already assigned to this employee"
+  };
+}
+
+  const connection= await db.getConnection();
+
+  try{
+    await connection.beginTransaction();
+
+    //close the current active assignment if any
+    if(assignedRows.length>0){
+      await connection.query(
+      `update lead_assign
+      set unassign_at = now()
+      where lead_id =?
+      and unassign_at is null`,
+      [leadId]
+    );
+    }
+    
+
+    //create the new assignment 
+    await connection.query(
+      `insert into lead_assign
+      (lead_id,employee_id)
+      values (?,?)`,
+      [leadId,employeeId]
+    );
+
+    //update the lead status if its first assignment
+      await connection.query(
+      `update leads
+      set lead_status ='assigned'
+      where lead_id=?
+      and lead_status='new'`,
+      [leadId]
+    );
+    
+    await connection.commit();
+
+    return{
+      success:true,
+      statusCode:200,
+      message:
+      assignedRows.length===0 
+      ? "lead assigned successfully"
+      : "lead reassigned successfully"
+    };
+  }catch(error){
+    await connection.rollback();
+    throw error;
+  }finally{
+    connection.release();
+  }
+};
+
+
+
