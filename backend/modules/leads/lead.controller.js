@@ -98,26 +98,6 @@ export const changeStatus= async(req,res)=>{
   }
 };
 
-export const assignEmployee= async(req,res)=>{
-  try{
-    const{leadId}=req.params;
-    const{employeeId}=req.body;
-    const result = await assignEmployeeService(
-      leadId,
-      employeeId
-    );
-
-    return res.status(result.statusCode).json(result);
-
-  }catch(error){
-    console.error("Error assign lead:",error);
-
-    return res.status(500).json({
-      success:false,
-      message:"Internal server error"
-    });
-  }
-};
 
 export const updateLead=async(req,res)=>{
   try{
@@ -135,6 +115,27 @@ export const updateLead=async(req,res)=>{
   return res.status(result.statusCode).json(result);
   }catch(error){
     console.error("Error lead update:",error);
+
+    return res.status(500).json({
+      success:false,
+      message:"Internal server error"
+    });
+  }
+};
+
+export const assignEmployee= async(req,res)=>{
+  try{
+    const{leadId}=req.params;
+    const{employeeId}=req.body;
+    const result = await assignEmployeeService(
+      leadId,
+      employeeId,
+    );
+
+    return res.status(result.statusCode).json(result);
+
+  }catch(error){
+    console.error("Error assign lead:",error);
 
     return res.status(500).json({
       success:false,
