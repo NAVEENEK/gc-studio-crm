@@ -1,4 +1,4 @@
-import { manualLeadService,viewLeadsService,leadInfoService,changeStatusService, assignEmployeeService } from "./lead.service.js";
+import { manualLeadService,viewLeadsService,leadInfoService,changeStatusService, assignEmployeeService, updateLeadService } from "./lead.service.js";
 
 export const manualLead=async(req,res)=>{
  try{
@@ -20,10 +20,7 @@ export const manualLead=async(req,res)=>{
     email,
     interestedService
   );
-  if(!result.success){
-    return res.status(result.statusCode).json(result);
-  }
-  return res.status(201).json(result);
+  return res.status(result.statusCode).json(result);
  }catch(error){
   console.error("manual lead error:",error);
 
@@ -43,11 +40,7 @@ export const viewLeads=async(req,res)=>{
     clientId,
     role
   );
-  if(!result.success){
-    return res.status(result.statusCode).json
-      (result);
-  }
-  return res.status(200).json(result);
+  return res.status(result.statusCode).json(result);
 
 
  }catch(error){
@@ -71,10 +64,7 @@ export const leadInfo=async(req,res)=>{
       employeeId,
       role
     );
-    if(!result.success){
-      return res.status(result.statusCode).json(result);
-    }
-    return res.status(200).json(result);
+    return res.status(result.statusCode).json(result);
   }catch(error){
     console.error("Lead info controller error:",error);
 
@@ -97,9 +87,6 @@ export const changeStatus= async(req,res)=>{
       role,
       status
     );
-    if(!result.success){
-      return res.status(result.statusCode).json(result);
-    }
     return res.status(result.statusCode).json(result);
   }catch(error){
     console.error("change status controller error:",error);
@@ -124,6 +111,30 @@ export const assignEmployee= async(req,res)=>{
 
   }catch(error){
     console.error("Error assign lead:",error);
+
+    return res.status(500).json({
+      success:false,
+      message:"Internal server error"
+    });
+  }
+};
+
+export const updateLead=async(req,res)=>{
+  try{
+    const {leadName,phoneNumber,email,interestedService}=req.body;
+  const {leadId}=req.params;
+  const {employeeId}=req.user;
+  const result= await updateLeadService(
+    employeeId,
+    leadId,
+    leadName,
+    phoneNumber,
+    email,
+    interestedService
+  );
+  return res.status(result.statusCode).json(result);
+  }catch(error){
+    console.error("Error lead update:",error);
 
     return res.status(500).json({
       success:false,
