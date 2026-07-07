@@ -232,7 +232,7 @@ export const changeStatusService=async(
     };
   }
 
-  const [result]=await db.query(
+  await db.query(
     `update leads
     set lead_status=?
     where lead_id=?`,
@@ -296,9 +296,8 @@ export const updateLeadService=async(
     };
   }
 
-  const [result]=await db.query(
-    `
-    update leads 
+  await db.query(
+    ` update leads 
     set 
     lead_name =?,
     phone_number =?,
