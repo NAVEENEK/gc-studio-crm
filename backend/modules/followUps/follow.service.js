@@ -148,4 +148,204 @@ export const updateFollowService=async(
     statusCode:200,
     message:"follow up updated successfully"
   };
-}
+};
+
+export const viewFollowService=async(
+  leadId,
+  employeeId,
+  myemployeeId,
+  clientId,
+  role,
+  status,
+  filter
+)=>{
+  let query;
+  let value=[];
+
+  if(role==="manager"){
+    if(employeeId){
+      query=
+      `select l.lead_name,
+      f.follow_id,
+      f.follow_up_date,
+      f.follow_up_status,
+      f.task,
+      f.created_at
+      from leads as l
+      inner join follow_up as f
+      on l.lead_id=f.lead_id
+      where f.employee_id=?
+      and l.client_id=?
+      order by f.follow_up_date asc`;
+      value=[employeeId,clientId];
+    }
+    else if(leadId){
+      query=
+      `select e.employee_name,
+      f.follow_id,
+      f.follow_up_date,
+      f.follow_up_status,
+      f.task,
+      f.created_at
+      from employees as e
+      inner join follow_up as f
+      on e.employee_id=f.employee_id
+      inner join leads as l
+      on f.lead_id=l.lead_id
+      where f.lead_id=?
+      and l.client_id=?
+      order by f.follow_up_date asc`;
+      value=[leadId,clientId]
+    }
+    else if(status){
+      query=
+      `select 
+      l.lead_name,
+      e.employee_name,
+      f.follow_id,
+      f.follow_up_date,
+      f.follow_up_status,
+      f.task,
+      f.created_at
+      from leads as l
+      inner join follow_up as f
+      on l.lead_id=f.lead_id
+      inner join employees as e 
+      on f.employee_id=e.employee_id
+      where f.follow_up_status=?
+      and l.client_id=?
+      order by f.follow_up_date asc`;
+      value=[status,clientId];
+
+    }
+    else if(filter==="overdue"){
+      query=
+      `select 
+      l.lead_name,
+      e.employee_name,
+      f.follow_id,
+      f.follow_up_date,
+      f.follow_up_status,
+      f.task,
+      f.created_at
+      from leads as l
+      inner join follow_up as f
+      on l.lead_id=f.lead_id
+      inner join employees as e 
+      on f.employee_id=e.employee_id
+      where l.client_id=?
+      and f.follow_up_status='pending'
+      and f.follow_up_date < curdate()
+      order by f.follow_up_date asc`;
+      value=[clientId]
+
+    }
+
+  }
+  else{
+    if(leadId){
+      query=
+      `select 
+      f.follow_id,
+      f.task,
+      f.follow_up_date,
+      f.follow_up_status,
+      f.created_at
+      from follow_up as f
+      inner join lead_assign as la
+      on la.lead_id=f.lead_id
+      where la.lead_id=?
+      and la.employee_id=?
+      and la.unassign_at is NULL
+      order by f.follow_up_date asc`;
+      value=[leadId,myemployeeId];
+    }
+    else if(status){
+      query=
+      `select 
+      l.lead_name,
+      f.follow_id,
+      f.task,
+      f.follow_up_date,
+      f.follow_up_status,
+      f.created_at
+      from follow_up as f
+      inner join leads as l
+      on l.lead_id=f.lead_id
+      inner join lead_assign as la
+      on f.lead_id=la.lead_id
+      where la.employee_id=?
+      and la.unassign_at is NULL
+      and f.follow_up_status=?
+      order by f.follow_up_date asc`;
+      value=[myemployeeId,status];
+
+    }
+    else if(filter==="today"){
+      query=
+      `select 
+      l.lead_name,
+      f.follow_id,
+      f.task,
+      f.follow_up_date,
+      f.follow_up_status,
+      f.created_at
+      from follow_up as f
+      inner join leads as l
+      on l.lead_id=f.lead_id
+      inner join lead_assign as la
+      on f.lead_id=la.lead_id
+      where la.employee_id=?
+      and la.unassign_at is NULL
+      and f.follow_up_date = curdate()
+      order by f.follow_up_date asc`;
+      value=[myemployeeId];
+    }
+    else if(filter==="overdue"){
+      query=
+      `select 
+      l.lead_name,
+      f.follow_id,
+      f.task,
+      f.follow_up_date,
+      f.follow_up_status,
+      f.created_at
+      from follow_up as f
+      inner join leads as l
+      on l.lead_id=f.lead_id
+      inner join lead_assign as la
+      on f.lead_id=la.lead_id
+      where la.employee_id=?
+      and la.unassign_at is NULL
+      and f.follow_up_status='pending'
+      and f.follow_up_date < curdate()
+      order by f.follow_up_date asc`;
+      value=[myemployeeId];
+
+    }
+  }
+
+  if(!query){
+    return{
+      success:false,
+      statusCode:400,
+      message:"Invalid filter"
+    };
+  }
+
+  const [result]=await db.query(query,value);
+  if(result.length===0){
+    return{
+      success:false,
+      statusCode:404,
+      message:"follow up not found"
+    };
+  }
+  return{
+    success:true,
+    statusCode:200,
+    data:result
+  };
+};
+
+
