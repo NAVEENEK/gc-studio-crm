@@ -1,6 +1,8 @@
 import db from "../../config/db.js";
 import bcrypt from "bcrypt";
+import { count } from "console";
 import crypto from "crypto";
+import { stat } from "fs";
 
 //the agency user create client and a single manager 
 export const createClientService = async ({
@@ -134,4 +136,79 @@ export const createClientService = async ({
   }finally{
     connection.release();
   }
+};
+
+export const updateClientService=async({
+  clientId,
+  clientName,
+  businessType,
+  email,
+  phoneNumber,
+  whatsAppNumber,
+  website,
+  address,
+  city,
+  state,
+  country
+})=>{
+  const[clientRows]=await db.query(
+    `select client_id
+    from clients
+    where client_id=?`,
+    [clientId]
+  );
+  if(clientRows.length === 0){
+    return{
+      success:false,
+      statusCode:404,
+      message:"client not found"
+    };
+  }
+  const[emailRows]=await db.query(
+    `select client_id
+    from clients
+    where email=?
+    and client_id <> ?`,
+    [email,clientId]
+  );
+  if(emailRows.length!==0){
+    return{
+      success:false,
+      statusCode:409,
+      message:"client email is already registered"
+    };
+  }
+  await db.query(
+    `update clients
+    set 
+    client_name=?,
+    business_type=?,
+    email=?,
+    phone_number=?,
+    whatsapp_number=?,
+    website=?,
+    address=?,
+    city=?,
+    state=?,
+    country=?
+    where client_id=?`,
+    [
+      clientName,
+      businessType,
+      email,
+      phoneNumber,
+      whatsAppNumber,
+      website,
+      address,
+      city,
+      state,
+      country,
+      clientId
+    ]
+  );
+  return{
+    success:true,
+    statusCode:200,
+    message:"client updated successfully"
+  };
 };
