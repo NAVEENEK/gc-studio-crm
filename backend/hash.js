@@ -1,4 +1,4 @@
 import bcrypt from "bcrypt";
-const password="agency";
+const password="small";
 const hash=await bcrypt.hash(password,10);
 console.log("password",hash);

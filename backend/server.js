@@ -17,7 +17,7 @@ app.use("/notes",noteRoutes);
 
 app.use("/follow",followRoutes);
 
-app.use("/client",clientRoutes);
+app.use("/clients",clientRoutes);
 
 app.listen(process.env.PORT,()=>{
   console.log("server runing");

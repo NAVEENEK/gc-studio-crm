@@ -212,3 +212,42 @@ export const updateClientService=async({
     message:"client updated successfully"
   };
 };
+
+export const changeStatusService=async(
+  clientId,
+  clientStatus
+)=>{
+  const [clientRows]=await db.query(
+    `select client_id
+    from clients
+    where client_id=?`,
+    [clientId]
+  );
+  if(clientRows.length===0){
+    return{
+      success:false,
+      statusCode:404,
+      message:"Client not found"
+    };
+  }
+
+  const validStatus=["active","inactive","suspended"];
+  if(!validStatus.includes(clientStatus)){
+    return{
+      success:false,
+      statusCode:400,
+      message:"Invalid client status"
+    };
+  }
+  await db.query(
+    `update clients
+    set client_status=?
+    where client_id=?`,
+    [clientStatus,clientId]
+  );
+  return{
+    success:true,
+    statusCode:200,
+    message:"Status changed successfully"
+  }; 
+};

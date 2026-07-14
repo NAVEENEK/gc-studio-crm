@@ -41,7 +41,8 @@ export const employeeLoginService=async(
     {
       employeeId:employee.employee_id,
       clientId:employee.client_id,
-      role:employee.employee_role
+      role:employee.employee_role,
+      userType:"employee"
       
     },
     process.env.JWT_SECRET,
@@ -119,7 +120,8 @@ export const agencyLoginService=async(
     user:{
       userId:user.user_id,
       userName:user.user_name,
-      userRole:user.user_role
+      userRole:user.user_role,
+      userType:"agency"
     }
   };
-}
+};
