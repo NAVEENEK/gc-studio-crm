@@ -1,4 +1,4 @@
-import { changeStatusService, clientDetailsService, createClientService, updateClientService, viewClientsService } from "./client.service.js";
+import { changeStatusService, clientDetailsService, createClientService, updateClientService, viewClientLeadsService, viewClientsService } from "./client.service.js";
 
 export const createClient = async (req, res) => {
   try {
@@ -75,6 +75,22 @@ export const viewClients = async (req, res) => {
     return res.status(result.statusCode).json(result);
   } catch (error) {
     console.error("Error in fetching clients:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
+export const viewClientLeads = async (req, res) => {
+  try {
+    const { clientId } = req.params;
+    const result = await viewClientLeadsService(clientId);
+
+    return res.status(result.statusCode).json(result);
+  } catch (error) {
+    console.error("Error in Fetching leads:", error);
 
     return res.status(500).json({
       success: false,

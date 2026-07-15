@@ -289,3 +289,24 @@ export const viewClientsService=async ()=>{
   };
 };
 
+export const viewClientLeadsService=async(
+  clientId
+)=>{
+  const [result]=await db.query(
+    `select c.client_name,
+    l.lead_name,
+    cm.campaign_name
+    from clients as c
+    inner join leads as l
+    on l.client_id=c.client_id
+    inner join campaign as cm
+    on l.campaign_id=cm.campaign_id
+    where c.client_id=?`,
+    [clientId]
+  );
+  return{
+    success:true,
+    statusCode:200,
+    leads:result
+  };
+};
