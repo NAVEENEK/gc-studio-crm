@@ -1,7 +1,7 @@
 import express from "express";
 import { verifyToken } from "../../middleware/verifyToken.js";
 import { allowRole } from "../../middleware/allowRole.js";
-import { changeStatus, clientDetails, createClient, updateClient, viewClients } from "./client.controller.js";
+import { changeStatus, clientDetails, createClient, updateClient, viewClientLeads, viewClients } from "./client.controller.js";
 
 const router=express.Router();
 
@@ -14,5 +14,7 @@ router.patch("/status/:clientId",verifyToken,allowRole("user"),changeStatus);
 router.get("/info/:clientId",verifyToken,clientDetails);
 
 router.get("/view",verifyToken,viewClients);
+
+router.get("/leads/:clientId",verifyToken,viewClientLeads);
 
 export default router;
