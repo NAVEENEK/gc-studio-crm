@@ -1,8 +1,6 @@
 import db from "../../config/db.js";
 import bcrypt from "bcrypt";
-import { count } from "console";
 import crypto from "crypto";
-import { stat } from "fs";
 
 //the agency user create client and a single manager 
 export const createClientService = async ({
@@ -251,3 +249,43 @@ export const changeStatusService=async(
     message:"Status changed successfully"
   }; 
 };
+
+export const clientDetailsService=async(
+  clientId,
+)=>{
+  const [result]=await db.query(
+    `select *
+    from clients
+    where client_id=?`,
+    [clientId]
+  );
+  if(result.length===0){
+    return{
+      success:false,
+      statusCode:404,
+      message:"Client not found"
+    };
+  }
+  return{
+    success:true,
+    statusCode:200,
+    client:result[0]
+  };
+};
+
+export const viewClientsService=async ()=>{
+  const [result]=await db.query(
+    `select 
+    client_id,
+    client_name,
+    client_status,
+    business_type
+    from clients`
+  );
+  return{
+    success:true,
+    statusCode:200,
+    clients:result
+  };
+};
+

@@ -1,4 +1,4 @@
-import { changeStatusService, createClientService, updateClientService } from "./client.service.js";
+import { changeStatusService, clientDetailsService, createClientService, updateClientService, viewClientsService } from "./client.service.js";
 
 export const createClient = async (req, res) => {
   try {
@@ -38,17 +38,47 @@ export const changeStatus = async (req, res) => {
   try {
     const { clientStatus } = req.body;
     const { clientId } = req.params;
-    const result =await changeStatusService(
+    const result = await changeStatusService(
       clientId,
       clientStatus
     );
     return res.status(result.statusCode).json(result);
-  }catch(error){
-    console.error("Error in changin status:",error);
+  } catch (error) {
+    console.error("Error in changin status:", error);
 
     return res.status(500).json({
-      success:false,
-      message:"Internal Server error"
+      success: false,
+      message: "Internal Server error"
+    });
+  }
+};
+
+export const clientDetails = async (req, res) => {
+  try {
+    const { clientId } = req.params;
+    const result = await clientDetailsService(clientId);
+
+    return res.status(result.statusCode).json(result);
+  } catch (error) {
+    console.error("Error in fetching client info:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
+export const viewClients = async (req, res) => {
+  try {
+    const result = await viewClientsService();
+    return res.status(result.statusCode).json(result);
+  } catch (error) {
+    console.error("Error in fetching clients:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
     });
   }
 };
