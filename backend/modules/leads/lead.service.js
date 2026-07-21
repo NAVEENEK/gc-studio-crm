@@ -131,7 +131,7 @@ export const viewLeadsService=async(
     success:true,
     statusCode:200,
     message:"leads fetched successfully",
-    data:rows[0]
+    data:rows
   };
 };
 
