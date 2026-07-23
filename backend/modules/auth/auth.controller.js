@@ -2,6 +2,7 @@ import { employeeLoginService,agencyLoginService } from "./auth.service.js";
 
 export const employeeLogin=async (req,res)=>{
   try{
+    console.log(req.body);
     const {email,password}=req.body;
   const result =await employeeLoginService(
     email,password

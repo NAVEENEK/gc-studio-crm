@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+
 import 'package:frontend/core/constants/api_endpoints.dart';
 import 'package:frontend/core/network/api_service.dart';
 import 'package:frontend/features/auth/model/agency_login_response.dart';

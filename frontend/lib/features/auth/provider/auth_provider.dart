@@ -57,4 +57,13 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> login(LoginRequest request)
+  async{
+    await employeeLogin(request);
+
+    if(_employee != null){
+      await agencyLogin(request);
+    }
+  }
 }

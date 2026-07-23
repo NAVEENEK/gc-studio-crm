@@ -53,7 +53,7 @@ export const employeeLoginService=async(
   );
 
   return{
-    success:true,
+    statusCode:200,
     token,
     employee:{
       employeeId:employee.employee_id,
@@ -115,7 +115,7 @@ export const agencyLoginService=async(
     }
   );
   return{
-    success:true,
+    statusCode:200,
     token,
     user:{
       userId:user.user_id,

@@ -20,6 +20,7 @@ class DioClient {
         },
         ),
     );
+    print("base url :${dio.options.baseUrl}");
     dio.interceptors.add(LoggingInterceptor());
     dio.interceptors.add(AuthInterceptor());
   }
