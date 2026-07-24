@@ -1,4 +1,5 @@
 
+import 'package:frontend/features/splash/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:frontend/core/routes/app_routes.dart';
 import 'package:frontend/features/auth/ui/login_screen.dart';
@@ -9,10 +10,14 @@ class AppRouter {
   AppRouter._();
 
   static final router=GoRouter(
-    initialLocation: AppRoutes.login,
+    initialLocation: AppRoutes.splashScreen,
     routes: [
       GoRoute(
-        path: AppRoutes.login,
+        path: AppRoutes.splashScreen,
+        builder: (context,state)=>const SplashScreen()
+        ),
+      GoRoute(
+        path: AppRoutes.loginScreen,
         builder: (context,State)=> const LoginScreen(),
         ),
 

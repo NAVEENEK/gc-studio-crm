@@ -3,11 +3,13 @@ import 'package:dio/dio.dart';
 import '../constants/api_constants.dart';
 import 'interceptors/auth_interceptor.dart';
 import 'interceptors/login_interceptor.dart';
+import '../storage/storage_service.dart';
 
 class DioClient {
   late final Dio dio;
+  final StorageService _storageService;
 
-  DioClient(){
+  DioClient(this._storageService){
     dio=Dio(
       BaseOptions(
         baseUrl:ApiConstants.baseUrl,
@@ -22,6 +24,6 @@ class DioClient {
     );
     print("base url :${dio.options.baseUrl}");
     dio.interceptors.add(LoggingInterceptor());
-    dio.interceptors.add(AuthInterceptor());
+    dio.interceptors.add(AuthInterceptor(_storageService));
   }
 }

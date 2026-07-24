@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/core/network/api_exception.dart';
+import 'package:frontend/core/storage/storage_service.dart';
 import 'package:frontend/features/auth/model/agency_login_response.dart';
 import 'package:frontend/features/auth/model/employee_login_response.dart';
 import 'package:frontend/features/auth/model/login_request.dart';
@@ -7,8 +8,12 @@ import 'package:frontend/features/auth/service/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService;
+  final StorageService _storageService;
 
-  AuthProvider(this._authService);
+  AuthProvider(
+    this._authService,
+    this._storageService
+    );
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
@@ -33,6 +38,17 @@ class AuthProvider extends ChangeNotifier {
     try {
       final employee = await _authService.employeeLogin(request);
       _employee = employee;
+
+      //save token
+      await _storageService.saveToken(employee.token);
+
+      //save logged-in user details
+      await _storageService.saveUser(
+        employeeId: employee.employeeId, 
+        clientId: employee.clientId, 
+        name: employee.name, 
+        role: employee.role
+        );
     } on ApiException catch (e) {
       _errorMessage = e.message;
     } finally {
@@ -50,6 +66,15 @@ class AuthProvider extends ChangeNotifier {
     try {
       final agency = await _authService.agencyLogin(request);
       _agency = agency;
+
+      await _storageService.saveToken(agency.token);
+
+      await _storageService.saveUser(
+        employeeId: agency.userId, 
+        name: agency.userName, 
+        role: agency.userRole,
+        userType: agency.userType
+        );
     } on ApiException catch (e) {
       _errorMessage = e.message;
     } finally {
