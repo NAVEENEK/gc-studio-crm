@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/core/network/api_service.dart';
 import 'package:frontend/core/network/dio_client.dart';
+import 'package:frontend/core/routes/app_router.dart';
 import 'package:frontend/features/auth/provider/auth_provider.dart';
 import 'package:frontend/features/auth/service/auth_service.dart';
-import 'package:frontend/features/auth/ui/login_screen.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 
@@ -47,10 +47,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const LoginScreen()
+      routerConfig: AppRouter.router,
     );
   }
 }
