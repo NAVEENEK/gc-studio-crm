@@ -34,25 +34,30 @@ class _LoginFormState extends State<LoginForm> {
       return;
     }
     //create the login request model
-    final request=LoginRequest(
-      email: _emailController.text.trim(), 
-      password: _passwordController.text
+    final request = LoginRequest(
+      email: _emailController.text.trim(),
+      password: _passwordController.text,
+    );
+
+    //call provider
+    final authProvider = context.read<AuthProvider>();
+    await authProvider.login(request);
+
+    
+    if (authProvider.employee != null) {
+      //login successful as employee
+      context.go(AppRoutes.employeeDashboard);
+    } else if (authProvider.agency != null) {
+      //login successful as agency
+      context.go(AppRoutes.agencyDashboard);
+    } else {
+      //login failed
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(authProvider.errorMessage ?? "Something went wrong"),
+        ),
       );
-
-      //call provider
-      final authProvider=context.read<AuthProvider>();
-      await authProvider.login(request);
-
-      if(authProvider.employee != null){
-        //login successful
-        if(authProvider.employee != null){
-          context.go(AppRoutes.employeeDashboard);
-        }else if(authProvider.agency != null){
-          context.go(AppRoutes.agencyDashboard);
-        }
-      }else{
-        //login failed
-      }
+    }
   }
 
   @override
