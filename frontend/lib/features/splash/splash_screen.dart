@@ -13,6 +13,14 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
+  @override
+  void initState(){
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    checkLogin();
+  });
+  }
+
   Future<void>checkLogin()async{
     final storageService=context.read<StorageService>();
     final token =await storageService.getToken();
@@ -27,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
       context.go(AppRoutes.agencyDashboard);
     }else{
       //go to employee dashboard
-      context.go(AppRoutes.employeeDashboard);
+      context.go(AppRoutes.ClientShell);
     }
   }
   @override
