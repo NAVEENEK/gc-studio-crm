@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/theme/app_colors.dart';
 
 class MenuItem extends StatelessWidget {
   final IconData icon;
@@ -18,43 +19,50 @@ class MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  InkWell(
-      onTap: onTap,
-      hoverColor: Colors.blueGrey,
-      borderRadius: BorderRadius.circular(10),
-      child:Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 12
-        ),
-        decoration: BoxDecoration(
-          color: isSelected
-          ? Colors.blue
-          :Colors.transparent,
-          borderRadius: BorderRadius.circular(10)
-        ),
-        child: Row(
-          
-          children: [
-            Icon(
-              icon,
-              color:Colors.white ,
-            ),
-            if(!isCollapsed)...[
-              const SizedBox(width: 15,),
-              Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16
-              ),
-              )
-            ]
+    return  Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        hoverColor: AppColors.primary.withValues(alpha: 0.20),
+        borderRadius: BorderRadius.circular(10),
+        child:Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 12
+          ),
+          decoration: BoxDecoration(
+            color: isSelected
+            ? AppColors.primary
+            :Colors.transparent,
+            borderRadius: BorderRadius.circular(10)
+          ),
+          child: Row(
             
-          ],
-        ),
-      ) 
-      
+            children: [
+              Icon(
+                icon,
+                color: isSelected 
+                ? Colors.white
+                :Colors.black,
+              ),
+              if(!isCollapsed)...[
+                const SizedBox(width: 15,),
+                Text(
+                title,
+                style:  TextStyle(
+                  color:isSelected 
+                  ? Colors.white 
+                  : Colors.black,
+                  fontSize: 16
+                ),
+                )
+              ]
+              
+            ],
+          ),
+        ) 
+        
+      ),
     );
   }
 }

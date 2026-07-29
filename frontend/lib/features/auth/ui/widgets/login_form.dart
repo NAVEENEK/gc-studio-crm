@@ -46,7 +46,7 @@ class _LoginFormState extends State<LoginForm> {
     
     if (authProvider.employee != null) {
       //login successful as employee
-      context.go(AppRoutes.EmployeeDashboard);
+      context.go(AppRoutes.clientDashboard);
     } else if (authProvider.agency != null) {
       //login successful as agency
       context.go(AppRoutes.agencyDashboard);
