@@ -1,12 +1,12 @@
 import 'package:frontend/features/campaigns/campaign.dart';
 import 'package:frontend/features/client_shell/client_shell.dart';
+import 'package:frontend/features/dashboard/ui/client_dashboard.dart';
 import 'package:frontend/features/leads/leads.dart';
 import 'package:frontend/features/settings/settings.dart';
 import 'package:frontend/features/splash/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:frontend/core/routes/app_routes.dart';
 import 'package:frontend/features/auth/ui/login_screen.dart';
-import 'package:frontend/features/dashboard/ui/employee_dashboard.dart';
 import 'package:frontend/features/dashboard/ui/agency_dashboard.dart';
 
 class AppRouter {
