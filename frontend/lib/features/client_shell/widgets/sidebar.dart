@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/core/routes/app_routes.dart';
+import 'package:frontend/core/theme/app_colors.dart';
 import 'package:frontend/features/client_shell/widgets/menu_item.dart';
 import 'package:go_router/go_router.dart';
 
@@ -7,22 +8,35 @@ class Sidebar extends StatelessWidget {
   final bool isCollapsed;
   final VoidCallback onToggle;
 
-  const Sidebar({required this.isCollapsed, required this.onToggle, super.key});
+  const Sidebar({
+    required this.isCollapsed, 
+    required this.onToggle, 
+    super.key
+    });
 
   @override
   Widget build(BuildContext context) {
+    final currentLocation=GoRouterState.of(context).uri.path;
     return //sidebar
     AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       width: isCollapsed ? 80 : 250,
-      color: Colors.blueGrey,
+      color: AppColors.surface,
 
       child: Column(
         children: [
           //menu button
-          IconButton(
-            onPressed: onToggle,
-            icon: const Icon(Icons.menu, color: Colors.white),
+          Padding(
+            padding: const EdgeInsets.only(left: 18),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                onPressed: onToggle,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: const Icon(Icons.menu, color: AppColors.textPrimary),
+              ),
+            ),
           ),
           const SizedBox(height: 20),
 
@@ -30,36 +44,36 @@ class Sidebar extends StatelessWidget {
             icon: Icons.dashboard,
             title: "Dashboard",
             isCollapsed: isCollapsed,
-            isSelected: true,
+            isSelected: currentLocation==AppRoutes.clientDashboard,
             onTap: () {
-              context.go(AppRoutes.EmployeeDashboard);
+              context.go(AppRoutes.clientDashboard);
             },
           ),
           MenuItem(
             icon: Icons.people,
             title: "Leads",
             isCollapsed: isCollapsed,
-            isSelected: false,
+            isSelected: currentLocation==AppRoutes.clientLeads,
             onTap: () {
-              context.go(AppRoutes.Leads);
+              context.go(AppRoutes.clientLeads);
             },
           ),
           MenuItem(
             icon: Icons.campaign,
             title: "campaigns",
             isCollapsed: isCollapsed,
-            isSelected: false,
+            isSelected: currentLocation==AppRoutes.clientCampaigns,
             onTap: () {
-              context.go(AppRoutes.Campaign);
+              context.go(AppRoutes.clientCampaigns);
             },
           ),
           MenuItem(
             icon: Icons.settings,
             title: "settings",
             isCollapsed: isCollapsed,
-            isSelected: false,
+            isSelected: currentLocation==AppRoutes.clientSettings,
             onTap: () {
-              context.go(AppRoutes.Settings);
+              context.go(AppRoutes.clientSettings);
             },
           ),
         ],

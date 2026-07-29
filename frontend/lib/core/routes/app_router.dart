@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:frontend/features/campaigns/campaign.dart';
 import 'package:frontend/features/client_shell/client_shell.dart';
 import 'package:frontend/features/leads/leads.dart';
@@ -26,29 +25,33 @@ class AppRouter {
       ),
 
       GoRoute(
-        path: AppRoutes.EmployeeDashboard,
-        builder: (context, state) => const EmployeeDashboard(),
-      ),
-
-      GoRoute(
         path: AppRoutes.agencyDashboard,
         builder: (context, state) => const AgencyDashboard(),
       ),
-      GoRoute(
-        path: AppRoutes.Leads,
-        builder: (Context, State) => const Leads(),
-      ),
-      GoRoute(
-        path: AppRoutes.Campaign,
-        builder: (Context, State) => const Campaign(),
-      ),
-      GoRoute(
-        path: AppRoutes.Settings,
-        builder: (Context, State) => const Settings(),
-      ),
-      GoRoute(
-        path: AppRoutes.ClientShell,
-        builder: (Context, State) => ClientShell(),
+
+      ShellRoute(
+        builder: (Context, State, child) {
+          return ClientShell(child: child);
+        },
+        routes: [
+          GoRoute(
+            path: AppRoutes.clientDashboard,
+            builder: (context, state) => const ClientDashboard(),
+          ),
+
+          GoRoute(
+            path: AppRoutes.clientLeads,
+            builder: (Context, State) => const Leads(),
+          ),
+          GoRoute(
+            path: AppRoutes.clientCampaigns,
+            builder: (Context, State) => const Campaign(),
+          ),
+          GoRoute(
+            path: AppRoutes.clientSettings,
+            builder: (Context, State) => const Settings(),
+          ),
+        ],
       ),
     ],
   );

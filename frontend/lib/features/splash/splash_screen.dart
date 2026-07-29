@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/routes/app_routes.dart';
 import 'package:frontend/core/storage/storage_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
       context.go(AppRoutes.agencyDashboard);
     }else{
       //go to employee dashboard
-      context.go(AppRoutes.ClientShell);
+      context.go(AppRoutes.clientDashboard);
     }
   }
   @override
