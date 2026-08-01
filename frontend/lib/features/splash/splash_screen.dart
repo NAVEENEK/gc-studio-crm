@@ -3,7 +3,6 @@ import 'package:frontend/core/routes/app_routes.dart';
 import 'package:frontend/core/storage/storage_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend/core/routes/app_routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

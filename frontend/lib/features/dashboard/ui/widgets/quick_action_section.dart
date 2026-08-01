@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/core/theme/app_colors.dart';
 import 'package:frontend/features/dashboard/ui/widgets/quick_action_tile.dart';
 
 class QuickActionSection extends StatelessWidget {
