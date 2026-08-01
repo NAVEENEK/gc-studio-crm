@@ -5,6 +5,8 @@ import 'package:frontend/core/routes/app_router.dart';
 import 'package:frontend/core/storage/storage_service.dart';
 import 'package:frontend/features/auth/provider/auth_provider.dart';
 import 'package:frontend/features/auth/service/auth_service.dart';
+import 'package:frontend/features/followups/providers/follow_up_provider.dart';
+import 'package:frontend/features/followups/services/follow_up_service.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 
@@ -36,6 +38,12 @@ void main() {
             context.read<StorageService>(),
           ),
         ),
+        Provider<FollowUpService>(
+          create: (context)=>FollowUpService(context.read<ApiService>()),
+        ),
+        ChangeNotifierProvider<FollowUpProvider>(create: (context)=>FollowUpProvider(
+          context.read<FollowUpService>(),
+        ))
       ],
       child: const MyApp(),
     ),
