@@ -7,10 +7,12 @@ import 'package:go_router/go_router.dart';
 class Sidebar extends StatelessWidget {
   final bool isCollapsed;
   final VoidCallback onToggle;
+  final Widget profileWidget;
 
   const Sidebar({
     required this.isCollapsed, 
     required this.onToggle, 
+    required this.profileWidget,
     super.key
     });
 
@@ -76,7 +78,11 @@ class Sidebar extends StatelessWidget {
               context.go(AppRoutes.clientSettings);
             },
           ),
-          
+
+          const Spacer(),
+
+          profileWidget,
+
         ],
       ),
     );

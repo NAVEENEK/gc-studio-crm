@@ -1,3 +1,4 @@
+
 class AppRoutes {
   AppRoutes._();
   static const splashScreen="/";
@@ -11,4 +12,7 @@ class AppRoutes {
 
   //agency
   static const agencyDashboard="/agency/dashboard";
+
+  //common
+  static const ProfileScreen="/profile";
 }
