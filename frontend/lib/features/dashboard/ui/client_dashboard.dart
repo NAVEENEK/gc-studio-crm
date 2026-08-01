@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/features/dashboard/ui/widgets/performance_card.dart';
 import 'package:frontend/features/dashboard/ui/widgets/quick_action_section.dart';
+import 'package:frontend/features/dashboard/ui/widgets/today_follow_up.dart';
+import 'package:frontend/features/followups/providers/follow_up_provider.dart';
+import 'package:provider/provider.dart';
 
 class ClientDashboard extends StatefulWidget {
   const ClientDashboard({super.key});
@@ -10,6 +13,14 @@ class ClientDashboard extends StatefulWidget {
 }
 
 class _ClientDashboardState extends State<ClientDashboard> {
+  @override
+  void initState(){
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      context.read<FollowUpProvider>().loadTodayFollowUps();
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -25,7 +36,7 @@ class _ClientDashboardState extends State<ClientDashboard> {
                     color: Colors.amberAccent,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(width: 20),
                 Expanded(
                   child: PerformanceCard(
                     icon: Icons.perm_camera_mic_outlined,
@@ -33,7 +44,7 @@ class _ClientDashboardState extends State<ClientDashboard> {
                     color: Colors.amberAccent,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(width: 20),
                 Expanded(
                   child: PerformanceCard(
                     icon: Icons.perm_camera_mic_outlined,
@@ -41,7 +52,7 @@ class _ClientDashboardState extends State<ClientDashboard> {
                     color: Colors.amberAccent,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(width: 20),
                 Expanded(
                   child: PerformanceCard(
                     icon: Icons.perm_camera_mic_outlined,
@@ -53,6 +64,20 @@ class _ClientDashboardState extends State<ClientDashboard> {
             ),
             const QuickActionSection(),
             const SizedBox(height: 16),
+
+            Consumer<FollowUpProvider>(
+              builder: (context,Provider,child){
+                if(Provider.isLoading){
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if(Provider.errorMessage != null){
+                  return Text(Provider.errorMessage!);
+                }
+                return TodayFollowUp(followUps: Provider.todayFollowUps);
+              },
+            )
           ],
         ),
       ),

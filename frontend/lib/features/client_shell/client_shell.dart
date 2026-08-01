@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/routes/app_routes.dart';
+import 'package:frontend/core/storage/storage_service.dart';
 import 'package:frontend/features/client_shell/widgets/sidebar.dart';
+import 'package:go_router/go_router.dart';
 
 class ClientShell extends StatefulWidget {
   final Widget child;

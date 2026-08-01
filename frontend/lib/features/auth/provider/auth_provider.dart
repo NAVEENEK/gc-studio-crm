@@ -87,7 +87,7 @@ class AuthProvider extends ChangeNotifier {
   async{
     await employeeLogin(request);
 
-    if(_employee != null){
+    if(_employee == null){
       await agencyLogin(request);
     }
   }

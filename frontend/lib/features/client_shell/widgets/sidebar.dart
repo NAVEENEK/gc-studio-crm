@@ -76,6 +76,7 @@ class Sidebar extends StatelessWidget {
               context.go(AppRoutes.clientSettings);
             },
           ),
+          
         ],
       ),
     );

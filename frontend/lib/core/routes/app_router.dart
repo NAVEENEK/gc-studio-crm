@@ -1,7 +1,7 @@
 import 'package:frontend/features/campaigns/campaign.dart';
 import 'package:frontend/features/client_shell/client_shell.dart';
 import 'package:frontend/features/dashboard/ui/client_dashboard.dart';
-import 'package:frontend/features/leads/leads.dart';
+import 'package:frontend/features/leads/ui/leads.dart';
 import 'package:frontend/features/settings/settings.dart';
 import 'package:frontend/features/splash/splash_screen.dart';
 import 'package:go_router/go_router.dart';
