@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/routes/app_routes.dart';
 import 'package:frontend/core/storage/storage_service.dart';
 import 'package:frontend/features/client_shell/widgets/profile_icon.dart';
 import 'package:frontend/features/client_shell/widgets/sidebar.dart';
+import 'package:go_router/go_router.dart';
 
 class ClientShell extends StatefulWidget {
   final Widget child;
@@ -33,12 +35,50 @@ class _ClientShellState extends State<ClientShell> {
   }
 
   Future<void> _loadUser() async {
-    employeeName = await _storageService.getName() ?? "";
-    employeeRole = await _storageService.getRole() ?? "";
-
+    final name = await _storageService.getName();
+    final role = await _storageService.getRole();
     if (!mounted) return;
 
-    setState(() {});
+    setState(() {
+      employeeName = name ?? "";
+      employeeRole = role ?? "";
+    });
+  }
+
+  Future<void> _logout() async{
+    await _storageService.clear();
+    if(!mounted) return;
+    context.go(AppRoutes.loginScreen);
+  }
+
+  Future<void> _showLogoutDialog() async {
+    final shouldLogout = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Logout"),
+          content: const Text("Are you sure you want to logout?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text("cancel"),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text("Logout"),
+            ),
+          ],
+        );
+      },
+    );
+    if (shouldLogout == true) {
+      _logout();
+    }
   }
 
   @override
@@ -58,14 +98,14 @@ class _ClientShellState extends State<ClientShell> {
                 isCollapsed: isCollapsed,
                 onProfileTap: () {
                   //navigate profile page
+                  context.go(AppRoutes.ProfileScreen);
                 },
                 onLogoutTap: () {
                   //logout
+                  _showLogoutDialog();
                 },
               ),
             ),
-
-            //call profile +logout
             Expanded(child: widget.child),
           ],
         ),

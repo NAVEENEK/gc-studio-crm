@@ -74,18 +74,18 @@ export const updateFollow =async(req,res)=>{
 
 export const viewFollow=async(req,res)=>{
   try{
-    const{leadId,employeeId,status,filter}=req.params;
+    const{leadId,selectedEmployeeId,status,filter}=req.params;
     if(filter && filter !== "today" && filter !== "overdue"){
       return res.status(400).json({
         success:false,
         message:"Invalid filter"
       });
     }
-    const{myemployeeId,clientId,role}=req.user;
+    const{employeeId,clientId,role}=req.user;
     const result=await viewFollowService(
       leadId,
+      selectedEmployeeId,
       employeeId,
-      myemployeeId,
       clientId,
       role,
       status,
