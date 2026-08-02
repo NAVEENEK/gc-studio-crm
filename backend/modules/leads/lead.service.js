@@ -429,6 +429,42 @@ export const assignEmployeeService=async(
   }
 };
 
+export const leadStatusCountService=async(
+  employeeId
+)=>{
+  const [employeeRows]=await db.query(
+    `select employee_id 
+    from employees 
+    where employee_id=?`,
+    [employeeId]
+  );
+  if(employeeRows.length==0){
+    return {
+      success:false,
+      statusCode:404,
+      message:"Employee not found"
+    };
+  }
+  const [result]= await db.query(
+    `select 
+    l.lead_status,
+    count(*) as count
+    from lead_assign as la
+    inner join leads as l
+    on la.lead_id=l.lead_id
+    where la.employee_id=?
+    and unassign_at is null
+    group by l.lead_status`,
+    [employeeId]
+  );
+
+  return{
+    success:true,
+    statusCode:200,
+    result:result
+  }
+}
+
 
 
 
