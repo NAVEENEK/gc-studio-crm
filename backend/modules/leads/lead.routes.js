@@ -1,6 +1,6 @@
 import express from "express";
 import { verifyToken } from "../../middleware/verifyToken.js";
-import { manualLead,viewLeads,leadInfo, changeStatus, assignEmployee, updateLead } from "./lead.controller.js";
+import { manualLead,viewLeads,leadInfo, changeStatus, assignEmployee, updateLead, leadStatusCount } from "./lead.controller.js";
 import { allowRole } from "../../middleware/allowRole.js";
 
 const router=express.Router();
@@ -11,5 +11,6 @@ router.get("/info/:leadId",verifyToken,leadInfo);
 router.patch("/status/:leadId",verifyToken,allowRole("employee"),changeStatus);
 router.patch("/update/:leadId",verifyToken,allowRole("employee"),updateLead);
 router.patch("/assign/:leadId",verifyToken,allowRole("manager"),assignEmployee);
+router.get("/count",verifyToken,leadStatusCount);
 
 export default router;

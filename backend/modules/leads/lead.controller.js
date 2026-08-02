@@ -1,4 +1,4 @@
-import { manualLeadService,viewLeadsService,leadInfoService,changeStatusService, assignEmployeeService, updateLeadService } from "./lead.service.js";
+import { manualLeadService,viewLeadsService,leadInfoService,changeStatusService, assignEmployeeService, updateLeadService, leadStatusCountService } from "./lead.service.js";
 
 export const manualLead=async(req,res)=>{
  try{
@@ -136,6 +136,24 @@ export const assignEmployee= async(req,res)=>{
 
   }catch(error){
     console.error("Error assign lead:",error);
+
+    return res.status(500).json({
+      success:false,
+      message:"Internal server error"
+    });
+  }
+};
+
+export const leadStatusCount=async(req,res)=>{
+  try{
+    const{employeeId}=req.user;
+    const result =await leadStatusCountService(
+      employeeId
+    );
+
+    return res.status(result.statusCode).json(result);
+  }catch(error){
+    console.error("Error in lead status count:",error);
 
     return res.status(500).json({
       success:false,
