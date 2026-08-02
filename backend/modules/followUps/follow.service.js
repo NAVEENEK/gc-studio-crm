@@ -152,8 +152,8 @@ export const updateFollowService=async(
 
 export const viewFollowService=async(
   leadId,
+  selectedEmployeeId,
   employeeId,
-  myemployeeId,
   clientId,
   role,
   status,
@@ -163,7 +163,7 @@ export const viewFollowService=async(
   let value=[];
 
   if(role==="manager"){
-    if(employeeId){
+    if(selectedEmployeeId){
       query=
       `select l.lead_name,
       f.follow_id,
@@ -177,7 +177,7 @@ export const viewFollowService=async(
       where f.employee_id=?
       and l.client_id=?
       order by f.follow_up_date asc`;
-      value=[employeeId,clientId];
+      value=[selectedEmployeeId,clientId];
     }
     else if(leadId){
       query=
@@ -258,7 +258,7 @@ export const viewFollowService=async(
       and la.employee_id=?
       and la.unassign_at is NULL
       order by f.follow_up_date asc`;
-      value=[leadId,myemployeeId];
+      value=[leadId,employeeId];
     }
     else if(status){
       query=
@@ -278,7 +278,7 @@ export const viewFollowService=async(
       and la.unassign_at is NULL
       and f.follow_up_status=?
       order by f.follow_up_date asc`;
-      value=[myemployeeId,status];
+      value=[employeeId,status];
 
     }
     else if(filter==="today"){
@@ -297,9 +297,9 @@ export const viewFollowService=async(
       on f.lead_id=la.lead_id
       where la.employee_id=?
       and la.unassign_at is NULL
-      and f.follow_up_date = curdate()
+      and DATE(f.follow_up_date)= curdate()
       order by f.follow_up_date asc`;
-      value=[myemployeeId];
+      value=[employeeId];
     }
     else if(filter==="overdue"){
       query=
@@ -320,7 +320,7 @@ export const viewFollowService=async(
       and f.follow_up_status='pending'
       and f.follow_up_date < curdate()
       order by f.follow_up_date asc`;
-      value=[myemployeeId];
+      value=[employeeId];
 
     }
   }
@@ -332,7 +332,6 @@ export const viewFollowService=async(
       message:"Invalid filter"
     };
   }
-
   const [result]=await db.query(query,value);
   if(result.length===0){
     return{
@@ -344,7 +343,7 @@ export const viewFollowService=async(
   return{
     success:true,
     statusCode:200,
-    data:result
+    result:result
   };
 };
 
