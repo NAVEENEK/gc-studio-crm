@@ -333,13 +333,6 @@ export const viewFollowService=async(
     };
   }
   const [result]=await db.query(query,value);
-  if(result.length===0){
-    return{
-      success:false,
-      statusCode:404,
-      message:"follow up not found"
-    };
-  }
   return{
     success:true,
     statusCode:200,

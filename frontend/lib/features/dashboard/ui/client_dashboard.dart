@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/features/dashboard/ui/widgets/lead_status_chart.dart';
-import 'package:frontend/features/dashboard/ui/widgets/performance_card.dart';
+import 'package:frontend/shared/widgets/performance_card.dart';
 import 'package:frontend/features/dashboard/ui/widgets/quick_action_section.dart';
 import 'package:frontend/features/dashboard/ui/widgets/today_follow_up.dart';
 import 'package:frontend/features/followups/providers/follow_up_provider.dart';
@@ -68,24 +68,9 @@ class _ClientDashboardState extends State<ClientDashboard> {
             ),
             const QuickActionSection(),
             const SizedBox(height: 16),
-
-            Consumer<FollowUpProvider>(
-              builder: (context, Provider, child) {
-                if (Provider.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (Provider.errorMessage != null) {
-                  return Text(Provider.errorMessage!);
-                }
-                return TodayFollowUp(followUps: Provider.todayFollowUps);
-              },
-            ),
-            const SizedBox(height: 10,),
-            Row(
-              children: [
-                const LeadStatusChart(),
-              ],
-            ),
+            const TodayFollowUp(),
+            const SizedBox(height: 10),
+            Row(children: [Expanded(child: const LeadStatusChart())]),
           ],
         ),
       ),
