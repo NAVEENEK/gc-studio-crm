@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/features/dashboard/ui/widgets/lead_status_chart.dart';
 import 'package:frontend/features/dashboard/ui/widgets/performance_card.dart';
 import 'package:frontend/features/dashboard/ui/widgets/quick_action_section.dart';
 import 'package:frontend/features/dashboard/ui/widgets/today_follow_up.dart';
 import 'package:frontend/features/followups/providers/follow_up_provider.dart';
+import 'package:frontend/features/leads/provider/lead_provider.dart';
 import 'package:provider/provider.dart';
 
 class ClientDashboard extends StatefulWidget {
@@ -14,13 +16,15 @@ class ClientDashboard extends StatefulWidget {
 
 class _ClientDashboardState extends State<ClientDashboard> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<FollowUpProvider>().loadTodayFollowUps();
+      context.read<LeadProvider>().loadLeadStatusCount();
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -66,18 +70,22 @@ class _ClientDashboardState extends State<ClientDashboard> {
             const SizedBox(height: 16),
 
             Consumer<FollowUpProvider>(
-              builder: (context,Provider,child){
-                if(Provider.isLoading){
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+              builder: (context, Provider, child) {
+                if (Provider.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
                 }
-                if(Provider.errorMessage != null){
+                if (Provider.errorMessage != null) {
                   return Text(Provider.errorMessage!);
                 }
                 return TodayFollowUp(followUps: Provider.todayFollowUps);
               },
-            )
+            ),
+            const SizedBox(height: 10,),
+            Row(
+              children: [
+                const LeadStatusChart(),
+              ],
+            ),
           ],
         ),
       ),
