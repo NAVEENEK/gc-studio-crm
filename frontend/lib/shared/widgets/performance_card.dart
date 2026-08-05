@@ -16,6 +16,7 @@ class PerformanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 140,
       height: 190,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
