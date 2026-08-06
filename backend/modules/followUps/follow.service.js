@@ -1,37 +1,37 @@
 import db from "../../config/db.js";
 
-export const createFollowService=async(
+export const createFollowService = async (
   leadId,
   employeeId,
   followUpDate,
   task,
-)=>{
-  const[leadRows]=await db.query(
+) => {
+  const [leadRows] = await db.query(
     `select lead_id 
     from leads 
     where lead_id=?`,
-    [leadId]
+    [leadId],
   );
-  if(leadRows.length===0){
-    return{
-      success:false,
-      statusCode:404,
-      message:"Lead not found"
+  if (leadRows.length === 0) {
+    return {
+      success: false,
+      statusCode: 404,
+      message: "Lead not found",
     };
   }
-  const[assignRows]=await db.query(
+  const [assignRows] = await db.query(
     `select employee_id
     from lead_assign
     where lead_id=?
     and employee_id=?
     and unassign_at is NULL `,
-    [leadId,employeeId]
+    [leadId, employeeId],
   );
-  if(assignRows.length===0){
-    return{
-      success:false,
-      statusCode:403,
-      message:"lead is not assigned to you"
+  if (assignRows.length === 0) {
+    return {
+      success: false,
+      statusCode: 403,
+      message: "lead is not assigned to you",
     };
   }
 
@@ -42,97 +42,97 @@ export const createFollowService=async(
     follow_up_date,
     task)
     values(?,?,?,?)`,
-    [leadId,employeeId,followUpDate,task]
+    [leadId, employeeId, followUpDate, task],
   );
 
-  return{
-    success:true,
-    statusCode:200,
-    message:"Follow up created successfully"
+  return {
+    success: true,
+    statusCode: 200,
+    message: "Follow up created successfully",
   };
 };
 
-export const changeStatusService=async(
+export const changeStatusService = async (
   followId,
   employeeId,
-  followStatus
-)=>{
-  const [followRows]=await db.query(
+  followStatus,
+) => {
+  const [followRows] = await db.query(
     `select follow_id ,lead_id
     from follow_up
     where follow_id=?`,
-    [followId]
+    [followId],
   );
-  if(followRows.length===0){
-    return{
-      success:false,
-      statusCode:404,
-      message:"follow up not found"
+  if (followRows.length === 0) {
+    return {
+      success: false,
+      statusCode: 404,
+      message: "follow up not found",
     };
   }
-  const{lead_id}=followRows[0];
-  const [assignRows]=await db.query(
+  const { lead_id } = followRows[0];
+  const [assignRows] = await db.query(
     `select assign_id
     from lead_assign
     where employee_id=?
     and lead_id=?
     and unassign_at is NULL`,
-    [employeeId,lead_id]
+    [employeeId, lead_id],
   );
-  if(assignRows.length===0){
-    return{
-      success:false,
-      statusCode:403,
-      message:"lead is not assigned to you"
+  if (assignRows.length === 0) {
+    return {
+      success: false,
+      statusCode: 403,
+      message: "lead is not assigned to you",
     };
   }
   await db.query(
     `update follow_up
     set follow_up_status=?
     where follow_id=?`,
-    [followStatus,followId]
+    [followStatus, followId],
   );
-  return{
-    success:true,
-    statusCode:200,
-    message:"Status updated successfully"
+  return {
+    success: true,
+    statusCode: 200,
+    message: "Status updated successfully",
   };
 };
 
-export const updateFollowService=async(
+export const updateFollowService = async (
   followId,
   employeeId,
   followUpDate,
-  task
-)=>{
-  const[followRows]=await db.query(
+  task,
+) => {
+  const [followRows] = await db.query(
     `select lead_id,follow_id
     from follow_up
     where follow_id=?`,
-    [followId]
+    [followId],
   );
-  if(followRows.length===0){
-    return{
-      success:false,
-      statusCode:404,
-      message:"follow up not found"
+  if (followRows.length === 0) {
+    return {
+      success: false,
+      statusCode: 404,
+      message: "follow up not found",
     };
   }
-  const{lead_id}=followRows[0];
+  const { lead_id } = followRows[0];
 
-  const[assignRows]=await db.query(
+  const [assignRows] = await db.query(
     `select employee_id
     from lead_assign
     where lead_id=?
     and employee_id=?
     and unassign_at is NULL`,
-    [lead_id,employeeId]
+    [lead_id, employeeId],
   );
-  if(assignRows.length===0){
-    return{
-      success:false,
-      statusCode:403,
-      message:"lead is not assigned to you "
+  if (assignRows.length === 0) {
+    return {
+      success: false,
+      statusCode: 403,
+      message: "lead is not assigned to you ",
     };
   }
   await db.query(
@@ -140,32 +140,31 @@ export const updateFollowService=async(
     set follow_up_date=?,
     task=?
     where follow_id=? `,
-    [followUpDate,task,followId]
+    [followUpDate, task, followId],
   );
 
-  return{
-    success:true,
-    statusCode:200,
-    message:"follow up updated successfully"
+  return {
+    success: true,
+    statusCode: 200,
+    message: "follow up updated successfully",
   };
 };
 
-export const viewFollowService=async(
+export const viewFollowService = async (
   leadId,
   selectedEmployeeId,
   employeeId,
   clientId,
   role,
   status,
-  filter
-)=>{
+  filter,
+) => {
   let query;
-  let value=[];
+  let value = [];
 
-  if(role==="manager"){
-    if(selectedEmployeeId){
-      query=
-      `select l.lead_name,
+  if (role === "manager") {
+    if (selectedEmployeeId) {
+      query = `select l.lead_name,
       f.follow_id,
       f.follow_up_date,
       f.follow_up_status,
@@ -177,11 +176,9 @@ export const viewFollowService=async(
       where f.employee_id=?
       and l.client_id=?
       order by f.follow_up_date asc`;
-      value=[selectedEmployeeId,clientId];
-    }
-    else if(leadId){
-      query=
-      `select e.employee_name,
+      value = [selectedEmployeeId, clientId];
+    } else if (leadId) {
+      query = `select e.employee_name,
       f.follow_id,
       f.follow_up_date,
       f.follow_up_status,
@@ -195,11 +192,9 @@ export const viewFollowService=async(
       where f.lead_id=?
       and l.client_id=?
       order by f.follow_up_date asc`;
-      value=[leadId,clientId]
-    }
-    else if(status){
-      query=
-      `select 
+      value = [leadId, clientId];
+    } else if (status) {
+      query = `select 
       l.lead_name,
       e.employee_name,
       f.follow_id,
@@ -215,12 +210,9 @@ export const viewFollowService=async(
       where f.follow_up_status=?
       and l.client_id=?
       order by f.follow_up_date asc`;
-      value=[status,clientId];
-
-    }
-    else if(filter==="overdue"){
-      query=
-      `select 
+      value = [status, clientId];
+    } else if (filter === "overdue") {
+      query = `select 
       l.lead_name,
       e.employee_name,
       f.follow_id,
@@ -237,15 +229,11 @@ export const viewFollowService=async(
       and f.follow_up_status='pending'
       and f.follow_up_date < curdate()
       order by f.follow_up_date asc`;
-      value=[clientId]
-
+      value = [clientId];
     }
-
-  }
-  else{
-    if(leadId){
-      query=
-      `select 
+  } else {
+    if (leadId) {
+      query = `select 
       f.follow_id,
       f.task,
       f.follow_up_date,
@@ -258,11 +246,9 @@ export const viewFollowService=async(
       and la.employee_id=?
       and la.unassign_at is NULL
       order by f.follow_up_date asc`;
-      value=[leadId,employeeId];
-    }
-    else if(status){
-      query=
-      `select 
+      value = [leadId, employeeId];
+    } else if (status) {
+      query = `select 
       l.lead_name,
       f.follow_id,
       f.task,
@@ -278,12 +264,9 @@ export const viewFollowService=async(
       and la.unassign_at is NULL
       and f.follow_up_status=?
       order by f.follow_up_date asc`;
-      value=[employeeId,status];
-
-    }
-    else if(filter==="today"){
-      query=
-      `select 
+      value = [employeeId, status];
+    } else if (filter === "today") {
+      query = `select 
       l.lead_name,
       f.follow_id,
       f.task,
@@ -299,11 +282,9 @@ export const viewFollowService=async(
       and la.unassign_at is NULL
       and DATE(f.follow_up_date)= curdate()
       order by f.follow_up_date asc`;
-      value=[employeeId];
-    }
-    else if(filter==="overdue"){
-      query=
-      `select 
+      value = [employeeId];
+    } else if (filter === "overdue") {
+      query = `select 
       l.lead_name,
       f.follow_id,
       f.task,
@@ -320,24 +301,36 @@ export const viewFollowService=async(
       and f.follow_up_status='pending'
       and f.follow_up_date < curdate()
       order by f.follow_up_date asc`;
-      value=[employeeId];
-
+      value = [employeeId];
+    } else {
+      query = `
+      select l.lead_name,
+      f.follow_id,
+      f.follow_up_date,
+      f.follow_up_status
+      from follow_up as f 
+      inner join leads as l
+      on l.lead_id=f.lead_id
+      inner join lead_assign as la
+      on f.lead_id=la.lead_id
+      where la.employee_id=?
+      and la.unassign_at is null
+      order by f.follow_up_date asc`;
+      value = [employeeId];
     }
   }
 
-  if(!query){
-    return{
-      success:false,
-      statusCode:400,
-      message:"Invalid filter"
+  if (!query) {
+    return {
+      success: false,
+      statusCode: 400,
+      message: "Invalid filter",
     };
   }
-  const [result]=await db.query(query,value);
-  return{
-    success:true,
-    statusCode:200,
-    result:result
+  const [result] = await db.query(query, value);
+  return {
+    success: true,
+    statusCode: 200,
+    result: result,
   };
 };
-
-
