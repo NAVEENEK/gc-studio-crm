@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/features/dashboard/ui/widgets/lead_status_chart.dart';
+import 'package:frontend/features/leads/ui/widget/lead_status_chart.dart';
+import 'package:frontend/features/dashboard/ui/widgets/today_followup.dart';
+import 'package:frontend/shared/widgets/followup_list_card.dart';
 import 'package:frontend/shared/widgets/performance_card.dart';
 import 'package:frontend/features/dashboard/ui/widgets/quick_action_section.dart';
-import 'package:frontend/features/dashboard/ui/widgets/today_follow_up.dart';
+import 'package:frontend/shared/widgets/error_state.dart';
 import 'package:frontend/features/followups/providers/follow_up_provider.dart';
 import 'package:frontend/features/leads/provider/lead_provider.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +29,9 @@ class _ClientDashboardState extends State<ClientDashboard> {
 
   @override
   Widget build(BuildContext context) {
+
+    final followUpProvider=context.watch<FollowUpProvider>();
+
     return SingleChildScrollView(
       child: Container(
         child: Column(
@@ -68,7 +73,7 @@ class _ClientDashboardState extends State<ClientDashboard> {
             ),
             const QuickActionSection(),
             const SizedBox(height: 16),
-            const TodayFollowUp(),
+            const TodayFollowup(),
             const SizedBox(height: 10),
             Row(children: [Expanded(child: const LeadStatusChart())]),
           ],
