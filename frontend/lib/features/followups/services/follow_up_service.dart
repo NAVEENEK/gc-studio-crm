@@ -1,4 +1,5 @@
 
+import 'package:dio/dio.dart';
 import 'package:frontend/core/constants/api_endpoints.dart';
 import 'package:frontend/core/network/api_service.dart';
 import 'package:frontend/features/followups/models/follow_up_model.dart';
@@ -19,5 +20,18 @@ class FollowUpService {
     return data
     .map((json)=>FollowUpModel.fromJson(json))
     .toList();
+  }
+
+  Future<List<FollowUpModel>> fetchMyFollowUps()
+  async{
+    final Response=await _apiService.get(
+      path: ApiEndpoints.fetchMyFollowUps
+      );
+
+      final List<dynamic> data=Response.data["result"];
+
+      return data
+      .map((json)=>FollowUpModel.fromJson(json))
+      .toList();
   }
 }

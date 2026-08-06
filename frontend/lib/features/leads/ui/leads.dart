@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/features/leads/provider/lead_provider.dart';
+import 'package:frontend/features/leads/ui/widget/lead_status_chart.dart';
 import 'package:frontend/features/leads/ui/widget/search_section.dart';
+import 'package:frontend/features/leads/ui/widget/upcoming_followups.dart';
+import 'package:frontend/shared/widgets/error_state.dart';
+import 'package:frontend/shared/widgets/followup_list_card.dart';
 import 'package:frontend/shared/widgets/performance_card.dart';
 import 'package:frontend/shared/widgets/primary_button.dart';
 import 'package:provider/provider.dart';
@@ -74,7 +78,16 @@ class Leads extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10,),
-            SearchSection()
+            SearchSection(),
+            const SizedBox(height: 10,),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: const LeadStatusChart()),
+                const SizedBox(width: 5,),
+                Expanded(child: const UpcomingFollowups()),
+              ],
+            ),
           ],
         ),
       ),

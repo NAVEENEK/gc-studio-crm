@@ -11,10 +11,12 @@ class FollowUpProvider extends ChangeNotifier{
   bool _isLoading=false;
   String? _errorMessage;
   List<FollowUpModel> _todayFollowUps=[];
+  List<FollowUpModel> _myFollowUps=[];
 
   bool get isLoading=>_isLoading;
   String? get errorMessage=>_errorMessage;
   List<FollowUpModel> get todayFollowUps=>_todayFollowUps;
+  List<FollowUpModel> get myFollowUps=>_myFollowUps;
 
   Future<void> loadTodayFollowUps() async{
     _isLoading=true;
@@ -24,6 +26,22 @@ class FollowUpProvider extends ChangeNotifier{
 
     try{
       _todayFollowUps=await _followUpService.fetchTodayFollowUps();
+    }on ApiException catch(e){
+      _errorMessage=e.message;
+    }finally{
+      _isLoading=false;
+      notifyListeners();
+    }
+  }
+
+  Future<void>loadMyFollowUps()async{
+    _isLoading=true;
+    _errorMessage=null;
+    _myFollowUps=[];
+    notifyListeners();
+
+    try{
+      _myFollowUps=await _followUpService.fetchMyFollowUps();
     }on ApiException catch(e){
       _errorMessage=e.message;
     }finally{
