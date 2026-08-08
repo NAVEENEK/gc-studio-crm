@@ -4,4 +4,5 @@ class ApiEndpoints {
   static const String fetchTodayFollowUps="/follow/view/:filter";
   static const String leadStatusCount="/leads/count";
   static const String fetchMyFollowUps="/follow/view";
+  static const String getMyLeads="/leads/viewLeads";
 }

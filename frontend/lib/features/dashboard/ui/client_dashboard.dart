@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/features/leads/ui/widget/lead_status_chart.dart';
+import 'package:frontend/features/dashboard/ui/widgets/lead_status_chart.dart';
 import 'package:frontend/features/dashboard/ui/widgets/today_followup.dart';
 import 'package:frontend/shared/widgets/followup_list_card.dart';
 import 'package:frontend/shared/widgets/performance_card.dart';

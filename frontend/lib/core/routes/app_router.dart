@@ -1,6 +1,7 @@
 import 'package:frontend/features/campaigns/campaign.dart';
 import 'package:frontend/features/client_shell/client_shell.dart';
 import 'package:frontend/features/dashboard/ui/client_dashboard.dart';
+import 'package:frontend/features/leads/ui/lead_info.dart';
 import 'package:frontend/features/leads/ui/leads.dart';
 import 'package:frontend/features/profile/profile.dart';
 import 'package:frontend/features/settings/settings.dart';
@@ -55,6 +56,11 @@ class AppRouter {
           GoRoute(
             path: AppRoutes.ProfileScreen,
             builder: (Context,State)=>const ProfileScreen(),
+            ),
+            GoRoute(
+              path: AppRoutes.clientLeadInfo,
+              builder: (Context,State)=>const 
+              LeadInfo()
             ),
         ],
       ),

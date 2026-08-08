@@ -163,10 +163,13 @@ export const leadInfoService=async(
       query=
       `
       select 
-      l.*
+      l.*,
+      c.campaign_name
       from leads as l
       inner join lead_assign as la
       on l.lead_id=la.lead_id
+      inner join campaign as c
+      on c.campaign_id=l.campaign_id
       where la.employee_id=? 
       and l.lead_id=?
       and l.client_id=?
