@@ -83,7 +83,9 @@ export const metaLeadService = async(
 export const viewLeadsService=async(
   employeeId,
   clientId,
-  role
+  role,
+  status,
+  leadName
 )=>{
   let query;
   let value=[];
@@ -100,15 +102,60 @@ export const viewLeadsService=async(
     value=[clientId];
   }
   else if(role==="employee"){
-    query=
-    `select leads.*
-    from leads 
-    inner join lead_assign
-    on leads.lead_id=lead_assign.lead_id
-    where leads.client_id=?
-    and lead_assign.employee_id=? `;
-
-    value=[clientId,employeeId];
+   if(status){
+    query=`select l.lead_id,
+    l.lead_name,
+    l.phone_number,
+    l.email,
+    l.created_at,
+    l.lead_status,
+    c.campaign_name
+    from leads as l
+    inner join lead_assign as la
+    on l.lead_id=la.lead_id
+    inner join campaign as c
+    ON l.campaign_id = c.campaign_id
+    where l.lead_status=?
+    and la.employee_id=?
+    and l.client_id=?
+    and la.unassign_at is null`;
+    value=[status,employeeId,clientId]
+   }else if(leadName){
+    query=`select l.lead_id,
+    l.lead_name,
+    l.phone_number,
+    l.email,
+    l.created_at,
+    l.lead_status,
+    c.campaign_name
+    from leads as l
+    inner join lead_assign as la
+    on l.lead_id=la.lead_id
+    inner join campaign as c
+   ON l.campaign_id = c.campaign_id
+    where l.lead_name like ?
+    and la.employee_id=?
+    and l.client_id=?
+    and la.unassign_at is null`;
+    value=[`%${leadName}%`,employeeId,clientId]
+   }else{
+    query=`select l.lead_id,
+    l.lead_name,
+    l.phone_number,
+    l.email,
+    l.created_at,
+    l.lead_status,
+    c.campaign_name
+    from leads as l
+    inner join lead_assign as la
+    on l.lead_id=la.lead_id
+    inner join campaign as c
+   ON l.campaign_id = c.campaign_id
+   where l.client_id=?
+    and la.employee_id=?
+    and la.unassign_at is null`;
+    value=[clientId,employeeId]
+   }
   }else{
     return{
       success:false,
@@ -118,14 +165,6 @@ export const viewLeadsService=async(
   }
 
   const [rows]=await db.query(query,value);
-
-  if(row.length===0){
-    return{
-      success:false,
-      statusCode:404,
-      message:"leads not found"
-    };
-  }
 
   return{
     success:true,
@@ -139,7 +178,7 @@ export const leadInfoService=async(
   leadId,
   clientId,
   employeeId,
-  role
+  role,
 )=>{
     let query;
     let value=[];
@@ -160,21 +199,21 @@ export const leadInfoService=async(
       `;
       value=[clientId,leadId];
     }else if(role==="employee"){
-      query=
-      `
-      select 
-      l.*,
-      c.campaign_name
+      query =`select l.*,
+      la.assign_at,
+      e.employee_name,
+      c.campaign_name,
+      c.campaign_id
       from leads as l
       inner join lead_assign as la
       on l.lead_id=la.lead_id
+      inner join employee as e
+      on la.employee_id = e.employee_id
       inner join campaign as c
-      on c.campaign_id=l.campaign_id
-      where la.employee_id=? 
-      and l.lead_id=?
-      and l.client_id=?
+      on l.campaign_id=c.campaign_id
+      where l.lead_id=?
       `;
-      value=[employeeId,leadId,clientId];
+      value=[leadId];
     }else{
       return{
         success:false,

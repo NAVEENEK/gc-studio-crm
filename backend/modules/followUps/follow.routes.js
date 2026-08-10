@@ -8,13 +8,6 @@ const router=express.Router();
 router.post("/create/:leadId",verifyToken,allowRole("employee"),createFollow);
 router.patch("/status/:followId",verifyToken,allowRole("employee"),changeStatus);
 router.patch("/update/:followId",verifyToken,allowRole("employee"),updateFollow);
-//list of follow up of a single employee
-router.get("/view/employee/:employeeId",verifyToken,viewFollow);
-//list of follow up of a single lead 
-router.get("/view/lead/:leadId",verifyToken,viewFollow);
-//list of follow up based on status
-router.get("/view/status/:status",verifyToken,viewFollow);
-//list of overdue/today follow up
-router.get("/view/:filter",verifyToken,viewFollow);
+router.get("/view",verifyToken,viewFollow);
 
 export default router;

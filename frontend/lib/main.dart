@@ -8,6 +8,7 @@ import 'package:frontend/features/auth/service/auth_service.dart';
 import 'package:frontend/features/followups/providers/follow_up_provider.dart';
 import 'package:frontend/features/followups/services/follow_up_service.dart';
 import 'package:frontend/features/leads/provider/lead_provider.dart';
+import 'package:frontend/features/leads/provider/lead_status_provider.dart';
 import 'package:frontend/features/leads/services/lead_service.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
@@ -53,6 +54,9 @@ void main() {
           ChangeNotifierProvider<LeadProvider>(
             create: (context)=>LeadProvider(context.read<LeadService>())
           ),
+          ChangeNotifierProvider<LeadStatusProvider>(
+            create: (context)=>LeadStatusProvider(context.read<LeadService>())
+            ),
       ],
       child: const MyApp(),
     ),

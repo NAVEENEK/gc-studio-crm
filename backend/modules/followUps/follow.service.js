@@ -150,187 +150,113 @@ export const updateFollowService = async (
   };
 };
 
-export const viewFollowService = async (
-  leadId,
-  selectedEmployeeId,
-  employeeId,
-  clientId,
+export const viewFollowService=async({
   role,
+  clientId,
+  employeeId,
+  selectedEmployeeId,
+  leadId,
+  leadName,
   status,
-  filter,
-) => {
-  let query;
-  let value = [];
+  filter
+})=>{
+  let query="";
+  let value=[];
 
-  if (role === "manager") {
-    if (selectedEmployeeId) {
-      query = `select l.lead_name,
-      f.follow_id,
-      f.follow_up_date,
-      f.follow_up_status,
-      f.task,
-      f.created_at
-      from leads as l
-      inner join follow_up as f
-      on l.lead_id=f.lead_id
-      where f.employee_id=?
-      and l.client_id=?
-      order by f.follow_up_date asc`;
-      value = [selectedEmployeeId, clientId];
-    } else if (leadId) {
-      query = `select e.employee_name,
-      f.follow_id,
-      f.follow_up_date,
-      f.follow_up_status,
-      f.task,
-      f.created_at
-      from employees as e
-      inner join follow_up as f
-      on e.employee_id=f.employee_id
-      inner join leads as l
-      on f.lead_id=l.lead_id
-      where f.lead_id=?
-      and l.client_id=?
-      order by f.follow_up_date asc`;
-      value = [leadId, clientId];
-    } else if (status) {
-      query = `select 
-      l.lead_name,
-      e.employee_name,
-      f.follow_id,
-      f.follow_up_date,
-      f.follow_up_status,
-      f.task,
-      f.created_at
-      from leads as l
-      inner join follow_up as f
-      on l.lead_id=f.lead_id
-      inner join employees as e 
-      on f.employee_id=e.employee_id
-      where f.follow_up_status=?
-      and l.client_id=?
-      order by f.follow_up_date asc`;
-      value = [status, clientId];
-    } else if (filter === "overdue") {
-      query = `select 
-      l.lead_name,
-      e.employee_name,
-      f.follow_id,
-      f.follow_up_date,
-      f.follow_up_status,
-      f.task,
-      f.created_at
-      from leads as l
-      inner join follow_up as f
-      on l.lead_id=f.lead_id
-      inner join employees as e 
-      on f.employee_id=e.employee_id
-      where l.client_id=?
-      and f.follow_up_status='pending'
-      and f.follow_up_date < curdate()
-      order by f.follow_up_date asc`;
-      value = [clientId];
-    }
-  } else {
-    if (leadId) {
-      query = `select 
-      f.follow_id,
-      f.task,
-      f.follow_up_date,
-      f.follow_up_status,
-      f.created_at
-      from follow_up as f
-      inner join lead_assign as la
-      on la.lead_id=f.lead_id
-      where la.lead_id=?
-      and la.employee_id=?
-      and la.unassign_at is NULL
-      order by f.follow_up_date asc`;
-      value = [leadId, employeeId];
-    } else if (status) {
-      query = `select 
-      l.lead_name,
-      f.follow_id,
-      f.task,
-      f.follow_up_date,
-      f.follow_up_status,
-      f.created_at
-      from follow_up as f
-      inner join leads as l
-      on l.lead_id=f.lead_id
-      inner join lead_assign as la
-      on f.lead_id=la.lead_id
-      where la.employee_id=?
-      and la.unassign_at is NULL
-      and f.follow_up_status=?
-      order by f.follow_up_date asc`;
-      value = [employeeId, status];
-    } else if (filter === "today") {
-      query = `select 
-      l.lead_name,
-      f.follow_id,
-      f.task,
-      f.follow_up_date,
-      f.follow_up_status,
-      f.created_at
-      from follow_up as f
-      inner join leads as l
-      on l.lead_id=f.lead_id
-      inner join lead_assign as la
-      on f.lead_id=la.lead_id
-      where la.employee_id=?
-      and la.unassign_at is NULL
-      and DATE(f.follow_up_date)= curdate()
-      order by f.follow_up_date asc`;
-      value = [employeeId];
-    } else if (filter === "overdue") {
-      query = `select 
-      l.lead_name,
-      f.follow_id,
-      f.task,
-      f.follow_up_date,
-      f.follow_up_status,
-      f.created_at
-      from follow_up as f
-      inner join leads as l
-      on l.lead_id=f.lead_id
-      inner join lead_assign as la
-      on f.lead_id=la.lead_id
-      where la.employee_id=?
-      and la.unassign_at is NULL
-      and f.follow_up_status='pending'
-      and f.follow_up_date < curdate()
-      order by f.follow_up_date asc`;
-      value = [employeeId];
-    } else {
-      query = `
-      select l.lead_name,
-      f.follow_id,
-      f.follow_up_date,
-      f.follow_up_status
-      from follow_up as f 
-      inner join leads as l
-      on l.lead_id=f.lead_id
-      inner join lead_assign as la
-      on f.lead_id=la.lead_id
-      where la.employee_id=?
-      and la.unassign_at is null
-      order by f.follow_up_date asc`;
-      value = [employeeId];
-    }
-  }
+  if(role==="manager"){
+    query=`
+    select
+    l.lead_name,
+    e.employee_name,
+    f.follow_id,
+    f.task,
+    f.follow_up_date,
+    f.follow_up_status,
+    f.created_at
+    from follow_up as f
+    inner join leads as l 
+    on l.lead_id=f.lead_id
+    inner join employees as e
+    on f.employee_id=e.employee_id
+    where l.client_id=?`;
+    value.push(clientId);
 
-  if (!query) {
-    return {
-      success: false,
-      statusCode: 400,
-      message: "Invalid filter",
+    if(selectedEmployeeId){
+      query += " and f.employee_id=?";
+      value.push(selectedEmployeeId);
+    }
+    if(leadId){
+      query += " and f.lead_id=?";
+      value.push(leadId);
+    }
+    if(leadName){
+      query += " and l.lead_name like ?";
+      value.push(`%${leadName}%`);
+    }
+    if(status){
+      query += " and f.follow_up_status = ?";
+      value.push(status);
+    }
+    if(filter === "today"){
+      query += " and date(f.follow_up_date)=curdate()";
+    }
+    if(filter==="overdue"){
+      query += ` 
+      and f.follow_up_status='pending'
+      and date(f.follow_up_date)<curdate()`;
+    }
+
+    query += " order by f.follow_up_date asc";
+
+  }else{
+    query=`
+    select 
+    l.lead_name,
+    f.follow_id,
+    f.task,
+    f.follow_up_date,
+    f.follow_up_status,
+    f.created_at
+    from follow_up as f
+    inner join leads as l
+    on f.lead_id=l.lead_id
+    inner join lead_assign as la
+    on f.lead_id=la.lead_id
+    where la.employee_id=?
+    and la.unassign_at is null `;
+
+    value.push(employeeId);
+
+    if(leadId){
+      query += " and f.lead_id=?";
+      value.push(leadId);
+    }
+    if(leadName){
+      query += " and l.lead_name like ?";
+      value.push(`%${leadName}%`);
+    }
+    if(status){
+      query += " and f.follow_up_status=?";
+      value.push(status);
+    }
+    if(filter==="today"){
+      query += " and date(f.follow_up_date)=curdate()";
+    }
+    if(filter==="overdue"){
+      query += ` 
+      and f.follow_up_status='pending'
+      and date(f.follow_up_date)<curdate()`;
+    }
+
+    query += " order by f.follow_up_date asc";
+    }
+
+    const [result]=await db.query(query,value);
+
+    return{
+      success: true,
+      statusCode:200,
+      result
     };
-  }
-  const [result] = await db.query(query, value);
-  return {
-    success: true,
-    statusCode: 200,
-    result: result,
   };
-};
+

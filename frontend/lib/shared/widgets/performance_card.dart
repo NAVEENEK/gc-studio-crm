@@ -5,18 +5,20 @@ class PerformanceCard extends StatelessWidget {
   final IconData icon;
   final String text;
   final Color color;
+  final double? width;
 
   const PerformanceCard({
     required this.icon,
     required this.text,
     required this.color,
+    this.width=140,
     super.key
     });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 140,
+      width: width,
       height: 190,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(

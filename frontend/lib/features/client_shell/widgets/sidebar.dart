@@ -10,15 +10,15 @@ class Sidebar extends StatelessWidget {
   final Widget profileWidget;
 
   const Sidebar({
-    required this.isCollapsed, 
-    required this.onToggle, 
+    required this.isCollapsed,
+    required this.onToggle,
     required this.profileWidget,
-    super.key
-    });
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final currentLocation=GoRouterState.of(context).uri.path;
+    final currentLocation = GoRouterState.of(context).uri.path;
     return //sidebar
     AnimatedContainer(
       duration: const Duration(milliseconds: 300),
@@ -46,7 +46,7 @@ class Sidebar extends StatelessWidget {
             icon: Icons.dashboard,
             title: "Dashboard",
             isCollapsed: isCollapsed,
-            isSelected: currentLocation==AppRoutes.clientDashboard,
+            isSelected: currentLocation == AppRoutes.clientDashboard,
             onTap: () {
               context.go(AppRoutes.clientDashboard);
             },
@@ -55,7 +55,7 @@ class Sidebar extends StatelessWidget {
             icon: Icons.people,
             title: "Leads",
             isCollapsed: isCollapsed,
-            isSelected: currentLocation==AppRoutes.clientLeads,
+            isSelected: currentLocation == AppRoutes.clientLeads,
             onTap: () {
               context.go(AppRoutes.clientLeads);
             },
@@ -64,12 +64,21 @@ class Sidebar extends StatelessWidget {
             icon: Icons.campaign,
             title: "campaigns",
             isCollapsed: isCollapsed,
-            isSelected: currentLocation==AppRoutes.clientCampaigns,
+            isSelected: currentLocation == AppRoutes.clientCampaigns,
             onTap: () {
               context.go(AppRoutes.clientCampaigns);
             },
           ),
           MenuItem(
+            icon: Icons.calendar_month,
+            title: "Follow-ups",
+            isCollapsed: isCollapsed,
+            isSelected: currentLocation == AppRoutes.clientFollowUps,
+            onTap: () {
+              context.go(AppRoutes.clientFollowUps);
+            },
+          ),
+           MenuItem(
             icon: Icons.settings,
             title: "settings",
             isCollapsed: isCollapsed,
@@ -82,7 +91,6 @@ class Sidebar extends StatelessWidget {
           const Spacer(),
 
           profileWidget,
-
         ],
       ),
     );

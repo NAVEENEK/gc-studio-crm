@@ -2,18 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:frontend/features/dashboard/ui/widgets/lead_status_chart.dart';
 import 'package:frontend/features/leads/provider/lead_provider.dart';
 import 'package:frontend/features/leads/ui/widget/lead_list.dart';
-import 'package:frontend/features/leads/ui/widget/search_section.dart';
+import 'package:frontend/shared/widgets/search_dropdown.dart';
+import 'package:frontend/shared/widgets/search_section.dart';
 import 'package:frontend/features/leads/ui/widget/upcoming_followups.dart';
 import 'package:frontend/shared/widgets/performance_card.dart';
 import 'package:frontend/shared/widgets/primary_button.dart';
 import 'package:provider/provider.dart';
 
-class Leads extends StatelessWidget {
+class Leads extends StatefulWidget {
   const Leads({super.key});
 
   @override
+  State<Leads> createState() => _LeadsState();
+}
+
+class _LeadsState extends State<Leads> {
+
+  final TextEditingController _searchController=TextEditingController();
+
+  @override
+  void dispose(){
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     final leadProvider=context.watch<LeadProvider>();
+
     return SingleChildScrollView(
       child: Container(
         child: Column(
@@ -77,7 +94,58 @@ class Leads extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10,),
-            SearchSection(),
+            SearchSection(
+              hintText: "Search Leads", 
+              controller: _searchController,
+              onChanged: (value){
+                leadProvider.loadMyLeads(search: value);
+              },
+              filters: [
+                SearchDropdown(
+                  hint: "Status", 
+                  value: leadProvider.selectedStatus, 
+                  items: const[
+                    DropdownMenuItem(
+                      value: "new",
+                      child: Text("New"),
+                      ),
+                      DropdownMenuItem(
+                      value: "assigned",
+                      child: Text("Assigned"),
+                      ),
+                      DropdownMenuItem(
+                      value: "contacted",
+                      child: Text("Contacted"),
+                      ),
+                      DropdownMenuItem(
+                      value: "qualified",
+                      child: Text("Qualified"),
+                      ),
+                      DropdownMenuItem(
+                      value: "praposal send",
+                      child: Text("Praposal Send"),
+                      ),
+                      DropdownMenuItem(
+                      value: "negotiation",
+                      child: Text("Negotiation"),
+                      ),
+                      DropdownMenuItem(
+                      value: "won",
+                      child: Text("Won"),
+                      ),
+                      DropdownMenuItem(
+                      value: "lost",
+                      child: Text("Lost"),
+                      ),
+                  ], 
+                  onChanged: (value){
+                    leadProvider.loadMyLeads(status: value);
+                  }
+                  )
+                
+              ],
+              ),
+
             const SizedBox(height: 10,),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,6 +155,7 @@ class Leads extends StatelessWidget {
                 Expanded(child: const UpcomingFollowups()),
               ],
             ),
+            const SizedBox(height: 10,),
             LeadList()
           ],
         ),

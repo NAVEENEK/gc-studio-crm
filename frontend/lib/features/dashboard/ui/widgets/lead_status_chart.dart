@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/features/leads/provider/lead_provider.dart';
+import 'package:frontend/features/leads/provider/lead_status_provider.dart';
 import 'package:provider/provider.dart';
 
 class LeadStatusChart extends StatelessWidget {
@@ -15,7 +15,7 @@ class LeadStatusChart extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Consumer<LeadProvider>(
+      child: Consumer<LeadStatusProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading) {
             return const Center(child: CircularProgressIndicator());
