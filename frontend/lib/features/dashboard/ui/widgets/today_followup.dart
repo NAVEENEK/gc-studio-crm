@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/features/followups/models/follow_up_model.dart';
+import 'package:frontend/core/routes/app_routes.dart';
 import 'package:frontend/features/followups/providers/follow_up_provider.dart';
 import 'package:frontend/shared/widgets/empty_state.dart';
 import 'package:frontend/shared/widgets/error_state.dart';
-import 'package:frontend/shared/widgets/followup_list_card.dart';
+import 'package:frontend/shared/widgets/list_widget.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class TodayFollowup extends StatelessWidget {
@@ -29,12 +30,25 @@ class TodayFollowup extends StatelessWidget {
             message: "No follow-ups scheduled for today",
           );
         }
-        return FollowupListCard(
-          title: "Today's Tasks", 
-          followUpList: provider.todayFollowUps, 
-          displayType: FollowUpDisplayType.task,
-          onViewAll: (){},
-          onItemTap: (curentFollow){},
+        return ListWidget(
+          title:  "Today's Tasks", 
+          items: provider.todayFollowUps, 
+          column: const[
+            "Lead",
+            "Task",
+            "Status"
+          ], 
+          columnFlex: const [3,5,2],
+          rowBuilder: (followups){
+            return [
+              followups.leadName,
+              followups.task,
+              followups.status
+            ];
+          },
+          onTap: (followups){
+            context.go(AppRoutes.clientFollowUpsInfo);
+          },
           );
       },
     );

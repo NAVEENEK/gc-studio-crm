@@ -1,6 +1,4 @@
-import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:frontend/core/constants/api_endpoints.dart';
 import 'package:frontend/core/network/api_service.dart';
 import 'package:frontend/features/leads/models/lead_model.dart';
@@ -23,12 +21,19 @@ class LeadService {
        .toList();
   }
 
-  Future<List<LeadModel>> getMyLeads()async{
+  Future<List<LeadModel>> getMyLeads({
+    String? status,
+    String? leadName
+  })async{
     final Response=await _apiService.get(
-      path: ApiEndpoints.getMyLeads
+      path: ApiEndpoints.getMyLeads,
+      queryParameters: {
+        if(status != null)"status":status,
+        if(leadName != null && leadName.isNotEmpty)"leadName":leadName,
+      }
       );
 
-      final List<dynamic> data=Response.data["result"];
+      final List<dynamic> data=Response.data["data"];
 
       return data
       .map((json)=>LeadModel.fromJson(json))

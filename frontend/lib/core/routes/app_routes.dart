@@ -10,6 +10,8 @@ class AppRoutes {
   static const clientCampaigns="/client/campaigns";
   static const clientSettings="/client/settings";
   static const clientLeadInfo="/client/lead/info";
+  static const clientFollowUps="/client/followUps";
+  static const clientFollowUpsInfo="/client/followUps/info";
 
   //agency
   static const agencyDashboard="/agency/dashboard";

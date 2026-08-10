@@ -34,11 +34,14 @@ export const manualLead=async(req,res)=>{
 export const viewLeads=async(req,res)=>{
  try{
    const{employeeId,clientId,role}=req.user;
+   const{status,leadName}=req.query;
 
   const result= await viewLeadsService(
     employeeId,
     clientId,
-    role
+    role,
+    status,
+    leadName
   );
   return res.status(result.statusCode).json(result);
 

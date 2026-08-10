@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/features/dashboard/ui/widgets/lead_status_chart.dart';
 import 'package:frontend/features/dashboard/ui/widgets/today_followup.dart';
-import 'package:frontend/shared/widgets/followup_list_card.dart';
+import 'package:frontend/features/leads/provider/lead_status_provider.dart';
 import 'package:frontend/shared/widgets/performance_card.dart';
 import 'package:frontend/features/dashboard/ui/widgets/quick_action_section.dart';
-import 'package:frontend/shared/widgets/error_state.dart';
 import 'package:frontend/features/followups/providers/follow_up_provider.dart';
 import 'package:frontend/features/leads/provider/lead_provider.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +22,7 @@ class _ClientDashboardState extends State<ClientDashboard> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<FollowUpProvider>().loadTodayFollowUps();
-      context.read<LeadProvider>().loadLeadStatusCount();
+      context.read<LeadStatusProvider>().loadLeadStatusCount();
     });
   }
 
@@ -43,6 +42,7 @@ class _ClientDashboardState extends State<ClientDashboard> {
                     icon: Icons.ac_unit_outlined,
                     text: "test",
                     color: Colors.amberAccent,
+
                   ),
                 ),
                 const SizedBox(width: 20),

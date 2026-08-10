@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/routes/app_routes.dart';
 import 'package:frontend/features/followups/providers/follow_up_provider.dart';
 import 'package:frontend/shared/widgets/empty_state.dart';
 import 'package:frontend/shared/widgets/error_state.dart';
-import 'package:frontend/shared/widgets/followup_list_card.dart';
+import 'package:frontend/shared/widgets/list_widget.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class UpcomingFollowups extends StatelessWidget {
@@ -27,14 +30,33 @@ class UpcomingFollowups extends StatelessWidget {
             message: "No follow ups"
             );
         }
-        return FollowupListCard(
+        return ListWidget(
           title: "Upcoming Follow-ups", 
-          followUpList: provider.myFollowUps, 
-          displayType: FollowUpDisplayType.followUpDate,
-          onViewAll: (){},
-          onItemTap: (curre){},
+          items: provider.myFollowUps, 
+          column: const[
+            "Lead",
+            "Follow-up date",
+            "Status"
+          ], 
+          columnFlex: const [3,2,2],
+          rowBuilder: (followUps){
+            return[
+              followUps.leadName,
+              DateFormat("dd/MM/yyyy").format(followUps.followUpDate),
+            ];
+          },
+          onTap: (followups){
+            context.go(AppRoutes.clientFollowUpsInfo);
+          },
+          maxItems: 5,
+          showViewAll: true,
+          onViewAll: (){
+            context.go(AppRoutes.clientFollowUps);
+          },
           );
       }
       );
   }
 }
+
+        
