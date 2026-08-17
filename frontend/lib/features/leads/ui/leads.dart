@@ -93,12 +93,28 @@ class _LeadsState extends State<Leads> {
                     
               ],
             ),
+            
+            
+
+            const SizedBox(height: 10,),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: const LeadStatusChart()),
+                const SizedBox(width: 5,),
+                Expanded(child: const UpcomingFollowups()),
+              ],
+            ),
             const SizedBox(height: 10,),
             SearchSection(
               hintText: "Search Leads", 
               controller: _searchController,
               onChanged: (value){
                 leadProvider.loadMyLeads(search: value);
+              },
+              onClear: (){
+                _searchController.clear();
+                leadProvider.clearFilters();
               },
               filters: [
                 SearchDropdown(
@@ -145,16 +161,6 @@ class _LeadsState extends State<Leads> {
                 
               ],
               ),
-
-            const SizedBox(height: 10,),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: const LeadStatusChart()),
-                const SizedBox(width: 5,),
-                Expanded(child: const UpcomingFollowups()),
-              ],
-            ),
             const SizedBox(height: 10,),
             LeadList()
           ],

@@ -5,7 +5,6 @@ import 'package:frontend/features/leads/provider/lead_status_provider.dart';
 import 'package:frontend/shared/widgets/performance_card.dart';
 import 'package:frontend/features/dashboard/ui/widgets/quick_action_section.dart';
 import 'package:frontend/features/followups/providers/follow_up_provider.dart';
-import 'package:frontend/features/leads/provider/lead_provider.dart';
 import 'package:provider/provider.dart';
 
 class ClientDashboard extends StatefulWidget {

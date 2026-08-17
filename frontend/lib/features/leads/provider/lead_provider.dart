@@ -45,4 +45,12 @@ class LeadProvider extends ChangeNotifier{
       notifyListeners();
     }
   }
+  
+  Future<void> clearFilters() async {
+    _selectedStatus = null;
+    _searchText = "";
+    _myLeads=[];
+    notifyListeners();
+    await loadMyLeads();
+  }
 }

@@ -6,6 +6,7 @@ class SearchSection extends StatelessWidget {
   final List<Widget> filters;
   final ValueChanged<String>? onChanged;
   final VoidCallback? onRefresh;
+  final VoidCallback? onClear;
 
   const SearchSection({
     super.key,
@@ -14,6 +15,7 @@ class SearchSection extends StatelessWidget {
     this.filters = const [],
     this.onChanged,
     this.onRefresh,
+    this.onClear,
   });
 
   @override
@@ -36,10 +38,26 @@ class SearchSection extends StatelessWidget {
         const SizedBox(width: 15),
 
         ...filters,
-        
+
         if (onRefresh != null) ...[
           const SizedBox(width: 15),
           IconButton(onPressed: onRefresh, icon: const Icon(Icons.refresh)),
+        ],
+        if (onClear != null) ...[
+          const SizedBox(width: 5),
+          TextButton(
+            onPressed: onClear,
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.blue,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(8),
+              ),
+            ),
+            child: Text("Clear", style: TextStyle(fontWeight: FontWeight.w600)),
+          ),
+          const SizedBox(width: 10),
         ],
       ],
     );

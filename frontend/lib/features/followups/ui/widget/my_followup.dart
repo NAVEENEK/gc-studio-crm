@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/core/routes/app_routes.dart';
 import 'package:frontend/features/followups/providers/follow_up_provider.dart';
-import 'package:frontend/features/followups/ui/followups.dart';
 import 'package:frontend/shared/widgets/empty_state.dart';
 import 'package:frontend/shared/widgets/error_state.dart';
 import 'package:frontend/shared/widgets/list_widget.dart';

@@ -48,13 +48,11 @@ class FollowUpProvider extends ChangeNotifier {
     if (status != null) {
       _selectedStatus = status.isEmpty ? null : status;
     }
-    ;
     if (search != null) _searchText = search;
 
     if (filter != null) {
       _selectedFilter = filter.isEmpty ? null : filter;
     }
-    ;
     try {
       _isLoading = true;
       _errorMessage = null;
@@ -78,5 +76,8 @@ class FollowUpProvider extends ChangeNotifier {
     _selectedFilter = null;
     _selectedStatus = null;
     _searchText = "";
+    _myFollowUps=[];
+    notifyListeners();
+    await loadMyFollowUps();
   }
 }
