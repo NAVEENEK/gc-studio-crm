@@ -21,7 +21,7 @@ class SearchDropdown<T>extends StatelessWidget {
     return SizedBox(
       width: width,
       child: DropdownButtonFormField(
-        value: value,
+        initialValue: value,
         decoration: InputDecoration(
           hintText: hint,
           border: OutlineInputBorder(

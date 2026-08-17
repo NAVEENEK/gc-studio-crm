@@ -55,10 +55,6 @@ class AppRouter {
             builder: (Context, State) => const ProfileScreen(),
           ),
           GoRoute(
-            path: AppRoutes.clientLeadInfo,
-            builder: (Context, State) => const LeadInfo(),
-          ),
-          GoRoute(
             path: AppRoutes.clientLeads,
             builder: (Context, State) => const Leads(),
           ),
@@ -72,6 +68,10 @@ class AppRouter {
             ), 
         ],
       ),
+      GoRoute(
+            path: AppRoutes.clientLeadInfo,
+            builder: (Context, State) => const LeadInfo(),
+          ),
     ],
   );
 }

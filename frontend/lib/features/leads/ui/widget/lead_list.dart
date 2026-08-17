@@ -52,7 +52,7 @@ class LeadList extends StatelessWidget {
                       ];
                     },
                     onTap: (lead){
-                      context.go(AppRoutes.clientLeadInfo);
+                      context.push(AppRoutes.clientLeadInfo);
                     },
                     );
 

@@ -55,7 +55,7 @@ class PerformanceCard extends StatelessWidget {
             height: 35,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.08),
+              color: color.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(8)
             ),
             child: Center(

@@ -73,6 +73,10 @@ class _FollowUpsState extends State<FollowUps> {
               onChanged: (value) {
                 followUpProvider.loadMyFollowUps(search: value);
               },
+              onClear: (){
+                _searchController.clear();
+                context.read<FollowUpProvider>().clearFilters();
+              },
               filters: [
                 SearchDropdown(
                   hint: "Status",
