@@ -70,7 +70,11 @@ class AppRouter {
       ),
       GoRoute(
             path: AppRoutes.clientLeadInfo,
-            builder: (Context, State) => const LeadInfo(),
+            builder: (Context, State){
+              final leadId= State.extra as int;
+
+              return LeadInfo(leadId: leadId);
+            },
           ),
     ],
   );

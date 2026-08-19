@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/features/leads/models/lead_model.dart';
 import 'package:frontend/shared/widgets/icon_container.dart';
+import 'package:intl/intl.dart';
 
 class PrimaryInfo extends StatelessWidget {
-  const PrimaryInfo({super.key});
+  final LeadModel lead;
+
+  const PrimaryInfo({
+    required this.lead,
+    super.key
+    });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +33,7 @@ class PrimaryInfo extends StatelessWidget {
       ),
     );
   }
-}
+
 
 Widget _buildHeader() {
   return Row(
@@ -37,7 +44,7 @@ Widget _buildHeader() {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Lead name",
+              lead.leadName,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 22,
@@ -50,7 +57,7 @@ Widget _buildHeader() {
                 const Icon(Icons.email, size: 16),
                 const SizedBox(width: 7),
                 Text(
-                  "email",
+                  lead.email!,
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(width: 7),
@@ -60,7 +67,7 @@ Widget _buildHeader() {
                 const SizedBox(width: 18),
                 const Icon(Icons.phone, size: 16),
                 Text(
-                  "1234567890",
+                  lead.phoneNumber!,
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                 ),
               ],
@@ -112,7 +119,7 @@ Widget _buildInfo() {
             _buildInfoItems(
               icon: Icons.campaign_outlined,
               label: "Lead Source",
-              value: "Facebook ads",
+              value: "Facebook ",
               iconColor: Colors.blue,
               iconBackground: Colors.white,
             ),
@@ -120,7 +127,7 @@ Widget _buildInfo() {
             _buildInfoItems(
               icon: Icons.local_offer_outlined,
               label: "Lead Status",
-              value: "New",
+              value: lead.status,
               iconColor: Colors.green,
               iconBackground: Colors.grey,
             ),
@@ -137,7 +144,7 @@ Widget _buildInfo() {
             _buildInfoItems(
               icon: Icons.folder_outlined,
               label: "Campaign",
-              value: "mansoon campaign",
+              value: lead.campaignName!,
               iconColor: Colors.yellow,
               iconBackground: Colors.grey,
             ),
@@ -145,7 +152,9 @@ Widget _buildInfo() {
             _buildInfoItems(
               icon: Icons.update_outlined,
               label: "last updated",
-              value: "12 aug 2026",
+              value: lead.updatedOn != null
+              ?DateFormat("dd MM yyyy").format(lead.updatedOn!)
+              :"Not updated",
               iconColor: Colors.orange,
               iconBackground: Colors.grey,
             ),
@@ -162,7 +171,7 @@ Widget _buildInfo() {
             _buildInfoItems(
               icon: Icons.person_outlined,
               label: "Assigned To",
-              value: "kaka",
+              value: lead.employeeName!,
               iconColor: Colors.purple,
               iconBackground: Colors.grey,
             ),
@@ -171,7 +180,7 @@ Widget _buildInfo() {
             _buildInfoItems(
               icon: Icons.star_outline,
               label: "Interested Service",
-              value: "Social Media Marketing",
+              value: lead.service!,
               iconColor: Colors.indigoAccent,
               iconBackground: Colors.grey,
             ),
@@ -186,7 +195,7 @@ Widget _buildInfo() {
             _buildInfoItems(
               icon: Icons.calendar_today_outlined,
               label: "Created On",
-              value: "10 aug 2026",
+              value: DateFormat("dd MM yyyy").format(lead.addedOn),
               iconColor: Colors.greenAccent,
               iconBackground: Colors.grey,
             ),
@@ -266,4 +275,6 @@ Widget _buildVerticalDivider() {
     margin: const EdgeInsets.symmetric(horizontal: 22, vertical: 3),
     color: Colors.grey.shade500,
   );
+}
+
 }

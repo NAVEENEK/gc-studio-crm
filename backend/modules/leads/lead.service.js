@@ -207,7 +207,7 @@ export const leadInfoService=async(
       from leads as l
       inner join lead_assign as la
       on l.lead_id=la.lead_id
-      inner join employee as e
+      inner join employees as e
       on la.employee_id = e.employee_id
       inner join campaign as c
       on l.campaign_id=c.campaign_id
