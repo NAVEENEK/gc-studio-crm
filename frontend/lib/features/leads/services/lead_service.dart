@@ -1,4 +1,5 @@
 
+import 'package:dio/dio.dart';
 import 'package:frontend/core/constants/api_endpoints.dart';
 import 'package:frontend/core/network/api_service.dart';
 import 'package:frontend/features/leads/models/lead_model.dart';
@@ -38,5 +39,15 @@ class LeadService {
       return data
       .map((json)=>LeadModel.fromJson(json))
       .toList();
+  }
+
+  Future<LeadModel> getLeadById(int leadId)
+  async{
+    final Response=await _apiService.get(
+      path: "${ApiEndpoints.getLeadById}/$leadId"
+      );
+
+      final Map<String,dynamic>data =Response.data["lead"];
+       return LeadModel.fromJson(data);
   }
 }
