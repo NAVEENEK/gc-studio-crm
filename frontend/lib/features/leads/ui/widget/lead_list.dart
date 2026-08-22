@@ -13,53 +13,80 @@ class LeadList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LeadProvider>(
-                builder: (context,Provider,child){
-                  if(Provider.isLoading){
-                    return const CircularProgressIndicator();
-                  }
-                  else if(Provider.errorMessage!=null){
-                    return ErrorState(
-                      title: "Error", 
-                      errorMessage: "Something went wrong");
-                  }
-                  else if(Provider.myLeads.isEmpty){
-                    return EmptyState(
-                      title: "No Leads", 
-                      message: "No leads assigned to you"
-                      );
-                  }
-                  return ListWidget(
-                    title: "Leads", 
-                    items: Provider.myLeads, 
-                    column: const[
-                      "Lead",
-                      "Contact",
-                      "Source",
-                      "Created At",
-                      "Status"
-                    ], 
-                    columnFlex: const[
-                      3,5,3,2,2
-                    ],
-                    rowBuilder: (lead){
-                      return[
-                        lead.leadName,
-                        lead.phoneNumber!,
-                        lead.campaignName!,
-                        DateFormat("dd/MM/yyyy").format(lead.addedOn),
-                        lead.status
-                      ];
-                    },
-                    onTap: (lead){
-                      context.push(
-                        AppRoutes.clientLeadInfo,
-                        extra: lead.leadId
-                        );
-                    },
-                    );
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(18),
+      elevation: 2,
+      child: SizedBox(
+        height: 280,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              //header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Leads",
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
 
-                }
-                );
+              Expanded(
+                child: Consumer<LeadProvider>(
+                  builder: (context, Provider, child) {
+                    if (Provider.isLoading) {
+                      return const CircularProgressIndicator();
+                    } else if (Provider.errorMessage != null) {
+                      return ErrorState(
+                        title: "Error",
+                        errorMessage: "Something went wrong",
+                      );
+                    } else if (Provider.myLeads.isEmpty) {
+                      return EmptyState(
+                        title: "No Leads",
+                        message: "No leads assigned to you",
+                      );
+                    }
+                    return ListWidget(
+                      items: Provider.myLeads,
+                      column: const [
+                        "Lead",
+                        "Contact",
+                        "Source",
+                        "Created At",
+                        "Status",
+                      ],
+                      columnFlex: const [3, 5, 3, 2, 2],
+                      rowBuilder: (lead) {
+                        return [
+                          lead.leadName,
+                          lead.phoneNumber!,
+                          lead.campaignName!,
+                          DateFormat("dd/MM/yyyy").format(lead.addedOn),
+                          lead.status,
+                        ];
+                      },
+                      onTap: (lead) {
+                        context.push(
+                          AppRoutes.clientLeadInfo,
+                          extra: lead.leadId,
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

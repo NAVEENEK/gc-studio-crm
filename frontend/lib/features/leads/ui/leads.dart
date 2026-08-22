@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/features/dashboard/ui/widgets/lead_status_chart.dart';
+import 'package:frontend/features/leads/ui/widget/lead_status_chart.dart';
 import 'package:frontend/features/leads/provider/lead_provider.dart';
 import 'package:frontend/features/leads/ui/widget/lead_list.dart';
 import 'package:frontend/shared/widgets/search_dropdown.dart';

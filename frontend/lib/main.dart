@@ -11,6 +11,8 @@ import 'package:frontend/features/leads/provider/lead_info_provider.dart';
 import 'package:frontend/features/leads/provider/lead_provider.dart';
 import 'package:frontend/features/leads/provider/lead_status_provider.dart';
 import 'package:frontend/features/leads/services/lead_service.dart';
+import 'package:frontend/features/notes/provider/note_latest_provider.dart';
+import 'package:frontend/features/notes/services/note_service.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 
@@ -60,7 +62,12 @@ void main() {
             ),
             ChangeNotifierProvider<LeadInfoProvider>(
               create: (context)=>LeadInfoProvider(context.read<LeadService>())
-              )
+              ),
+              Provider<NoteService>(
+                create: (context) => 
+                NoteService(context.read<ApiService>()),
+              ),
+              ChangeNotifierProvider<NoteLatestProvider>(create: (context)=>NoteLatestProvider(context.read<NoteService>()))
       ],
       child: const MyApp(),
     ),

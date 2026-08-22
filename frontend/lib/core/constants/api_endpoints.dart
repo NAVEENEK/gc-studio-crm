@@ -5,4 +5,5 @@ class ApiEndpoints {
   static const String fetchMyFollowUps="/follow/view";
   static const String getMyLeads="/leads/viewLeads";
   static const String getLeadById="/leads/info";
+  static const String getLatestNote="/notes/latest";
 }

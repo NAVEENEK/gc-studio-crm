@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/features/leads/provider/lead_info_provider.dart';
+import 'package:frontend/features/notes/widget/notes_card.dart';
 import 'package:frontend/features/leads/ui/widget/primary_info.dart';
 import 'package:frontend/shared/widgets/common_appbar.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +43,22 @@ class _LeadInfoState extends State<LeadInfo> {
               PrimaryInfo(
                 lead:provider.lead!
                 ),
+
+                const SizedBox(height: 15,),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: NotesCard(
+                        leadId: widget.leadId,
+                    )
+                    ),
+                    const SizedBox(width: 20,),
+                    Expanded(child: NotesCard(
+                      leadId: widget.leadId,
+                    )),
+                  ],
+                )
             ],
           ),
         ),
