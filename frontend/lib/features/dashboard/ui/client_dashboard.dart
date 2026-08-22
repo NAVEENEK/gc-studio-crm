@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/features/dashboard/ui/widgets/lead_status_chart.dart';
+import 'package:frontend/features/leads/ui/widget/lead_status_chart.dart';
 import 'package:frontend/features/dashboard/ui/widgets/today_followup.dart';
 import 'package:frontend/features/leads/provider/lead_status_provider.dart';
 import 'package:frontend/shared/widgets/performance_card.dart';
@@ -27,8 +27,6 @@ class _ClientDashboardState extends State<ClientDashboard> {
 
   @override
   Widget build(BuildContext context) {
-
-    final followUpProvider=context.watch<FollowUpProvider>();
 
     return SingleChildScrollView(
       child: Container(

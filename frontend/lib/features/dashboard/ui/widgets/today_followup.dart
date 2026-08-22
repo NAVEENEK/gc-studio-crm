@@ -8,49 +8,75 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class TodayFollowup extends StatelessWidget {
-
-  const TodayFollowup({ super.key});
+  const TodayFollowup({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<FollowUpProvider>(
-      builder: (context, provider, child) {
-        if (provider.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (provider.errorMessage != null) {
-          return ErrorState(
-            title: "Unable to load today's tasks",
-            errorMessage:  provider.errorMessage!
-            );
-        }
-        if (provider.todayFollowUps.isEmpty) {
-          return EmptyState(
-            title: "You're all caught up",
-            message: "No follow-ups scheduled for today",
-          );
-        }
-        return ListWidget(
-          title:  "Today's Tasks", 
-          items: provider.todayFollowUps, 
-          column: const[
-            "Lead",
-            "Task",
-            "Status"
-          ], 
-          columnFlex: const [3,5,2],
-          rowBuilder: (followups){
-            return [
-              followups.leadName,
-              followups.task,
-              followups.status
-            ];
-          },
-          onTap: (followups){
-            context.go(AppRoutes.clientFollowUpsInfo);
-          },
-          );
-      },
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(18),
+      elevation: 2,
+      child: SizedBox(
+        height: 280,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              //header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Today's Tasks",
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              Expanded(
+                child: Consumer<FollowUpProvider>(
+                  builder: (context, provider, child) {
+                    if (provider.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (provider.errorMessage != null) {
+                      return ErrorState(
+                        title: "Unable to load today's tasks",
+                        errorMessage: provider.errorMessage!,
+                      );
+                    }
+                    if (provider.todayFollowUps.isEmpty) {
+                      return EmptyState(
+                        title: "You're all caught up",
+                        message: "No follow-ups scheduled for today",
+                      );
+                    }
+                    return ListWidget(
+                      items: provider.todayFollowUps,
+                      column: const ["Lead", "Task", "Status"],
+                      columnFlex: const [3, 5, 2],
+                      rowBuilder: (followups) {
+                        return [
+                          followups.leadName,
+                          followups.task,
+                          followups.status,
+                        ];
+                      },
+                      onTap: (followups) {
+                        context.go(AppRoutes.clientFollowUpsInfo);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
