@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/features/followups/providers/follow_up_provider.dart';
 import 'package:frontend/features/leads/ui/widget/lead_status_chart.dart';
 import 'package:frontend/features/leads/provider/lead_provider.dart';
 import 'package:frontend/features/leads/ui/widget/lead_list.dart';
 import 'package:frontend/shared/widgets/search_dropdown.dart';
 import 'package:frontend/shared/widgets/search_section.dart';
-import 'package:frontend/features/leads/ui/widget/upcoming_followups.dart';
+import 'package:frontend/features/followups/ui/widget/upcoming_followups.dart';
 import 'package:frontend/shared/widgets/performance_card.dart';
 import 'package:frontend/shared/widgets/primary_button.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,19 @@ class Leads extends StatefulWidget {
 class _LeadsState extends State<Leads> {
 
   final TextEditingController _searchController=TextEditingController();
+
+  @override
+void initState() {
+  super.initState();
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (!mounted) return;
+
+    context.read<LeadProvider>().loadMyLeads();
+
+    context.read<FollowUpProvider>().loadMyFollowUps();
+  });
+}
 
   @override
   void dispose(){
@@ -69,6 +83,7 @@ class _LeadsState extends State<Leads> {
               ],
             ),
             const SizedBox(height: 10,),
+            // performance card 
             Wrap(
               spacing: 16,
               runSpacing: 16,
@@ -97,15 +112,19 @@ class _LeadsState extends State<Leads> {
             
 
             const SizedBox(height: 10,),
+
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                //lead status chart
                 Expanded(child: const LeadStatusChart()),
                 const SizedBox(width: 5,),
+                //upcomming follow up list 
                 Expanded(child: const UpcomingFollowups()),
               ],
             ),
             const SizedBox(height: 10,),
+            //seach bar
             SearchSection(
               hintText: "Search Leads", 
               controller: _searchController,
@@ -162,6 +181,7 @@ class _LeadsState extends State<Leads> {
               ],
               ),
             const SizedBox(height: 10,),
+            //lead list 
             LeadList()
           ],
         ),

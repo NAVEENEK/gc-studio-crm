@@ -4,6 +4,7 @@ import 'package:frontend/features/followups/providers/follow_up_provider.dart';
 import 'package:frontend/shared/widgets/empty_state.dart';
 import 'package:frontend/shared/widgets/error_state.dart';
 import 'package:frontend/shared/widgets/list_widget.dart';
+import 'package:frontend/shared/widgets/status_indicator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -64,7 +65,7 @@ class MyFollowUps extends StatelessWidget {
                           followUps.leadName,
                           followUps.task,
                           DateFormat("dd/MM/yyyy").format(followUps.followUpDate),
-                          followUps.status,
+                          StatusIndicator(status: followUps.status),
                         ];
                       },
                       onTap: (followUps) {

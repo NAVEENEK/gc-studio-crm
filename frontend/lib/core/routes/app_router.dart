@@ -1,6 +1,7 @@
 import 'package:frontend/features/campaigns/campaign.dart';
 import 'package:frontend/features/client_shell/client_shell.dart';
 import 'package:frontend/features/dashboard/ui/client_dashboard.dart';
+import 'package:frontend/features/followups/ui/add_follow_ups.dart';
 import 'package:frontend/features/followups/ui/followups.dart';
 import 'package:frontend/features/followups/ui/followups_info.dart';
 import 'package:frontend/features/leads/ui/lead_info.dart';
@@ -76,6 +77,24 @@ class AppRouter {
               return LeadInfo(leadId: leadId);
             },
           ),
+          GoRoute(
+            path: AppRoutes.clientAddFollowUps,
+            builder: (context,state){
+              final data=state.extra as Map<String,dynamic>;
+
+              return AddFollowUps(
+                leadId: data['leadId'] as int,
+                leadName: data['leadName'] as String,
+                );
+            }
+          )
+         /* GoRoute(
+            path: AppRoutes.clientAddFollowUps,
+            builder: (Context,State){
+              final 
+            }
+            )
+            */
     ],
   );
 }

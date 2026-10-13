@@ -12,6 +12,7 @@ class FollowUpProvider extends ChangeNotifier {
   String? _errorMessage;
   List<FollowUpModel> _todayFollowUps = [];
   List<FollowUpModel> _myFollowUps = [];
+  List<FollowUpModel> _leadFollowUps=[];
   String _searchText = "";
   String? _selectedStatus;
   String? _selectedFilter;
@@ -20,6 +21,8 @@ class FollowUpProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   List<FollowUpModel> get todayFollowUps => _todayFollowUps;
   List<FollowUpModel> get myFollowUps => _myFollowUps;
+  List<FollowUpModel> get leadFollowUps=>
+  _leadFollowUps;
   String get searchText => _searchText;
   String? get selectedStatus => _selectedStatus;
   String? get selectedFilter => _selectedFilter;
@@ -79,5 +82,47 @@ class FollowUpProvider extends ChangeNotifier {
     _myFollowUps=[];
     notifyListeners();
     await loadMyFollowUps();
+  }
+
+  Future<void> loadFollowUpsById(int leadId)async{
+    print("leadId:$leadId");
+    try{
+      _isLoading=true;
+      _errorMessage=null;
+      _leadFollowUps=[];
+      notifyListeners();
+
+      _leadFollowUps=await _followUpService.fetchFollowUpsById(leadId);
+    }on ApiException catch(e){
+      _errorMessage=e.message;
+    }finally{
+      _isLoading=false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> createFollowUp({
+    required int leadId,
+    required DateTime followUpDate,
+    required String notes
+  })async{
+    try{
+      _isLoading=true;
+      _errorMessage=null;
+      notifyListeners();
+
+      await _followUpService.createFollowUp(
+        leadId: leadId, 
+        followUpDate: followUpDate, 
+        notes: notes
+        );
+        return true;
+    }on ApiException catch(e){
+      _errorMessage=e.message;
+      return false;
+    }finally{
+      _isLoading=false;
+      notifyListeners();
+    }
   }
 }

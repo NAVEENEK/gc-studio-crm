@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/features/dashboard/ui/widgets/quick_action_tile.dart';
+import 'package:frontend/core/routes/app_routes.dart';
+import 'package:frontend/shared/widgets/quick_action_tile.dart';
+import 'package:go_router/go_router.dart';
 
-class QuickActionSection extends StatelessWidget {
-  const QuickActionSection({super.key});
+class QuickActionLead extends StatelessWidget {
+  final int leadId;
+  final String leadName;
+  const QuickActionLead({super.key,
+  required this.leadId,
+  required this.leadName});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +20,7 @@ class QuickActionSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.grey.shade200)
       ),
-      child: Column(
+      child:  Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
@@ -32,8 +38,8 @@ class QuickActionSection extends StatelessWidget {
                 Expanded(
                   child: 
                   QuickActionTile(
-                    title: "Add Lead", 
-                    icon: Icons.person, 
+                    title: "Add Notes", 
+                    icon: Icons.note_add_outlined, 
                     onTap: (){
 
                     }, 
@@ -44,10 +50,16 @@ class QuickActionSection extends StatelessWidget {
                   
                   Expanded(child: 
                   QuickActionTile(
-                    title: "View Leads", 
-                    icon: Icons.list_alt, 
+                    title: "Add Follow Up", 
+                    icon: Icons.add_alarm_outlined, 
                     onTap: (){
-
+                      context.push(
+                        AppRoutes.clientAddFollowUps,
+                        extra:{
+                          'leadId':leadId,
+                          'leadName':leadName
+                        }
+                      );
                     }, 
                     color: Colors.blue
                     )
@@ -57,8 +69,8 @@ class QuickActionSection extends StatelessWidget {
 
                     Expanded(child: 
                     QuickActionTile(
-                    title: "Campaign", 
-                    icon: Icons.campaign, 
+                    title: "Status", 
+                    icon: Icons.sync_alt_outlined, 
                     onTap: (){
 
                     }, 
@@ -69,7 +81,7 @@ class QuickActionSection extends StatelessWidget {
               ],
             )
         ],
-      )
+      ),
     );
   }
 }

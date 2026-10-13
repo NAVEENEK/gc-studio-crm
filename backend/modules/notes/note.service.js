@@ -105,6 +105,63 @@ export const viewNoteService=async(
   };
 };
 
+export const viewLatestNoteService=async(
+  leadId,
+  employeeId
+)=>{
+  const[leadRows]=await db.query(
+    `select lead_id 
+    from leads
+    where lead_id=?`,
+    [leadId]
+  );
+  if(leadRows.length===0){
+    return{
+      success:false,
+      statusCode:404,
+      message:"Lead not found"
+    };
+  }
+
+  const [assignRows]=await db.query(
+    `select assign_id
+    from lead_assign
+    where lead_id=?
+    and employee_id=?
+    and unassign_at is NULL`,
+    [leadId,employeeId]
+  );
+  if(assignRows.length===0){
+    return{
+      success:false,
+      statusCode:403,
+      message:"You are not the assigned employee"
+    }
+  }
+  const [notes]=await db.query(
+    `select 
+    l.note,
+    l.created_at,
+    l.note_id,
+    e.employee_name,
+    e.employee_status
+    from lead_notes as l
+    inner join employees as e
+    on l.employee_id=e.employee_id
+    where l.lead_id=?
+    order by l.created_at desc
+    limit 1`,
+    [leadId]
+  );
+
+  return{
+    success:true,
+    statusCode:200,
+    message:"note fetched",
+    notes
+  };
+};
+
 export const updateNoteService=async(
   noteId,
   employeeId,

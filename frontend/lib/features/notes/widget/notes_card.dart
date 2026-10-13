@@ -18,7 +18,9 @@ class _NotesCardState extends State<NotesCard> {
   @override
   void initState() {
     super.initState();
-    context.read<NoteLatestProvider>().fetchLatestNote(widget.leadId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<NoteLatestProvider>().fetchLatestNote(widget.leadId);
+    });
   }
 
   @override
@@ -51,35 +53,22 @@ class _NotesCardState extends State<NotesCard> {
                       fontSize: 16,
                     ),
                   ),
-                  ElevatedButton(
+                  TextButton(
                     onPressed: () {},
-                    child: const Text("+ Add"),
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.blueAccent,
+                      foregroundColor: Colors.blue,
                       backgroundColor: Colors.white,
                     ),
+                    child: const Text("View All Notes ->"),
                   ),
                 ],
               ),
             ),
 
             //note content
-            Expanded(child: _buildNoteContent(provider)
-            ),
+            Expanded(child: _buildNoteContent(provider)),
 
             const SizedBox(height: 10),
-
-            Align(
-              alignment: Alignment.centerLeft,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: const Text("View All Notes ->"),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.blue,
-                  backgroundColor: Colors.white,
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -87,78 +76,67 @@ class _NotesCardState extends State<NotesCard> {
   }
 }
 
-Widget _buildNoteContent(NoteLatestProvider provider){
-  if(provider.isLoading){
-    return const Center(
-      child: CircularProgressIndicator(),
+Widget _buildNoteContent(NoteLatestProvider provider) {
+  if (provider.isLoading) {
+    return const Center(child: CircularProgressIndicator());
+  }
+  if (provider.errorMessage != null) {
+    return ErrorState(
+      title: "Unable to load notes",
+      errorMessage: "Somethig Went wrong",
     );
   }
-  if(provider.errorMessage != null){
-    return ErrorState(
-      title: "Unable to load notes", 
-      errorMessage: "Somethig Went wrong"
-      );
-  }
-  if(provider.note == null){
+  if (provider.note == null) {
     return EmptyState(
-      title: "No Notes Yet", 
-      message: "There is no notes for this lead yet.  "
-      );
+      title: "No Notes Yet",
+      message: "There is no notes for this lead yet.  ",
+    );
   }
-  final note =provider.note!;
+  final note = provider.note!;
 
   return Container(
-      height: 150,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 209, 226, 243),
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: Colors.grey,
-          width: 1,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  note.employeeName ?? "Unknown",
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-                 Text(
-                  note.date.toString(),
-                  style: const TextStyle(
-                    color: Color.fromARGB(255, 45, 44, 44),
-                    fontSize: 13,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 15),
-
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                note.note,
+    height: 200,
+    decoration: BoxDecoration(
+      color: const Color.fromARGB(255, 209, 226, 243),
+      borderRadius: BorderRadius.circular(15),
+      border: Border.all(color: Colors.grey, width: 1),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                note.employeeName ?? "Unknown",
                 style: const TextStyle(
                   color: Colors.black,
-                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
                 ),
               ),
+              Text(
+                note.date.toString(),
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 45, 44, 44),
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 15),
+
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              note.note,
+              style: const TextStyle(color: Colors.black, fontSize: 14),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
-
-
-
+    ),
+  );
+}
