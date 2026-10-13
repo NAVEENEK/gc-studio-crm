@@ -4,6 +4,7 @@ import 'package:frontend/features/leads/provider/lead_provider.dart';
 import 'package:frontend/shared/widgets/empty_state.dart';
 import 'package:frontend/shared/widgets/error_state.dart';
 import 'package:frontend/shared/widgets/list_widget.dart';
+import 'package:frontend/shared/widgets/status_indicator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -70,7 +71,7 @@ class LeadList extends StatelessWidget {
                           lead.phoneNumber!,
                           lead.campaignName!,
                           DateFormat("dd/MM/yyyy").format(lead.addedOn),
-                          lead.status,
+                          StatusIndicator(status: lead.status),
                         ];
                       },
                       onTap: (lead) {

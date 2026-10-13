@@ -17,7 +17,7 @@ class TodayFollowup extends StatelessWidget {
       borderRadius: BorderRadius.circular(18),
       elevation: 2,
       child: SizedBox(
-        height: 280,
+        height: 350,
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(

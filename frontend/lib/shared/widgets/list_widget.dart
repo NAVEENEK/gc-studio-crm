@@ -8,7 +8,7 @@ class ListWidget<T> extends StatelessWidget {
   //flex value
   final List<int>? columnFlex;
   //convert one item into values for each column
-  final List<String> Function(T item) rowBuilder;
+  final List<dynamic> Function(T item) rowBuilder;
   //called when a row is tapped
   final void Function(T item)? onTap;
   //show only fist few row
@@ -75,11 +75,13 @@ class ListWidget<T> extends StatelessWidget {
                       value.length,
                       (column) => Expanded(
                         flex: flex[column],
-                        child: Text(
-                          value[column],
+                        child: value[column] is Widget
+                        ? value[column] as Widget
+                        :Text(
+                          value[column].toString(),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                        ),
+                        )
                       ),
                     ),
                   ),

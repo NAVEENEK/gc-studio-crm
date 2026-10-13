@@ -6,6 +6,7 @@ class SearchDropdown<T>extends StatelessWidget {
   final List<DropdownMenuItem<T>> items;
   final ValueChanged<T?> onChanged;
   final double width;
+  final String? Function(T?)? validator;
 
   const SearchDropdown({
     required this.hint,
@@ -13,6 +14,7 @@ class SearchDropdown<T>extends StatelessWidget {
     required this.items,
     required this.onChanged,
     this.width=170,
+    this.validator,
     super.key
     });
 
@@ -22,6 +24,7 @@ class SearchDropdown<T>extends StatelessWidget {
       width: width,
       child: DropdownButtonFormField(
         initialValue: value,
+        validator: validator,
         decoration: InputDecoration(
           hintText: hint,
           border: OutlineInputBorder(

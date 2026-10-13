@@ -10,4 +10,5 @@ router.patch("/status/:followId",verifyToken,allowRole("employee"),changeStatus)
 router.patch("/update/:followId",verifyToken,allowRole("employee"),updateFollow);
 router.get("/view",verifyToken,viewFollow);
 
+
 export default router;

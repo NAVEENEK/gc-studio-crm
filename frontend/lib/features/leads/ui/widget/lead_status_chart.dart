@@ -1,8 +1,10 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/core/theme/status_colors.dart';
 import 'package:frontend/features/leads/provider/lead_status_provider.dart';
 import 'package:frontend/shared/widgets/empty_state.dart';
 import 'package:frontend/shared/widgets/error_state.dart';
+import 'package:frontend/shared/widgets/status_indicator.dart';
 import 'package:provider/provider.dart';
 
 class LeadStatusChart extends StatelessWidget {
@@ -60,6 +62,9 @@ class LeadStatusChart extends StatelessWidget {
                           sections: provider.leadStatus.map((status) {
                             return PieChartSectionData(
                               value: status.count.toDouble(),
+                              color: StatusColors.getColor(
+                                status.status,
+                              ),
                               title: status.count.toString(),
                               radius: 60,
                               titleStyle: const TextStyle(
@@ -86,18 +91,8 @@ class LeadStatusChart extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             child: Row(
                               children: [
-                                Container(
-                                  width: 12,
-                                  height: 12,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.blue,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-
+                                StatusIndicator(status: status.status),
                                 const SizedBox(width: 8),
-
-                                Expanded(child: Text(status.status)),
 
                                 Text(
                                   status.count.toString(),

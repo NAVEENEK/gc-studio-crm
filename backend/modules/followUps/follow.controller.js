@@ -79,8 +79,7 @@ export const updateFollow = async (req, res) => {
 
 export const viewFollow = async (req, res) => {
   try {
-    const { leadId, selectedEmployeeId } = req.params;
-    const { status, leadName, filter } = req.query;
+    const { status, leadName, filter,leadId, selectedEmployeeId } = req.query;
     if (filter && filter !== "today" && filter !== "overdue") {
       return res.status(400).json({
         success: false,

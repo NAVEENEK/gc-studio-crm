@@ -1,5 +1,5 @@
 
-import { createNoteService, updateNoteService, viewNoteService } from "./note.service.js";
+import { createNoteService, updateNoteService, viewNoteService,viewLatestNoteService } from "./note.service.js";
 
 export const createNote= async(req,res)=>{
   try{
@@ -34,6 +34,25 @@ export const viewNote=async(req,res)=>{
     const{leadId}=req.params;
   const{employeeId}=req.user;
   const result=await viewNoteService(
+    leadId,
+    employeeId
+  );
+  return res.status(result.statusCode).json(result);
+  }catch(error){
+    console.error("Error viewing notes:",error);
+
+    return res.status(500).json({
+      success:false,
+      message:"internal server error"
+    });
+  }
+};
+
+export const viewLatestNote=async(req,res)=>{
+  try{
+    const{leadId}=req.params;
+  const{employeeId}=req.user;
+  const result=await viewLatestNoteService(
     leadId,
     employeeId
   );

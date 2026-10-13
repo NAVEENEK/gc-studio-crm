@@ -89,21 +89,6 @@ Widget _buildHeader() {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         ),
       ),
-      const SizedBox(width: 12),
-
-      OutlinedButton.icon(
-        onPressed: () {},
-        icon: const Icon(Icons.edit, size: 16),
-        label: const Text("Edit Status"),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.grey,
-          side: const BorderSide(color: Colors.grey),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusGeometry.circular(8),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        ),
-      ),
     ],
   );
 }
