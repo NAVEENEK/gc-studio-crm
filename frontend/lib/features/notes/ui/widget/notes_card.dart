@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/features/notes/provider/note_latest_provider.dart';
+import 'package:frontend/features/notes/provider/note_provider.dart';
 import 'package:frontend/shared/widgets/empty_state.dart';
 import 'package:frontend/shared/widgets/error_state.dart';
 import 'package:provider/provider.dart';
@@ -19,13 +19,13 @@ class _NotesCardState extends State<NotesCard> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<NoteLatestProvider>().fetchLatestNote(widget.leadId);
+      context.read<NoteProvider>().fetchLatestNote(widget.leadId);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<NoteLatestProvider>();
+    final provider = context.watch<NoteProvider>();
     return Container(
       height: 280,
       decoration: BoxDecoration(
@@ -76,7 +76,7 @@ class _NotesCardState extends State<NotesCard> {
   }
 }
 
-Widget _buildNoteContent(NoteLatestProvider provider) {
+Widget _buildNoteContent(NoteProvider provider) {
   if (provider.isLoading) {
     return const Center(child: CircularProgressIndicator());
   }

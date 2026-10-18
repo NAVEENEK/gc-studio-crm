@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+
 import 'package:frontend/core/constants/api_endpoints.dart';
 import 'package:frontend/core/network/api_service.dart';
 import 'package:frontend/features/followups/models/follow_up_model.dart';
