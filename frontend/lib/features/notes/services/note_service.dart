@@ -23,4 +23,16 @@ class NoteService {
         Map<String,dynamic>.from(data.first)
       );
   }
+
+  Future<void>createNotes({
+    required int leadId,
+    required String notes
+  })async{
+    await _apiService.post(
+      path: '${ApiEndpoints.createNotes}/$leadId',
+      data: {
+        "note":notes
+      }
+      );
+  }
 }

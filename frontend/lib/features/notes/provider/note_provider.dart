@@ -3,10 +3,10 @@ import 'package:frontend/core/network/api_exception.dart';
 import 'package:frontend/features/notes/models/note_model.dart';
 import 'package:frontend/features/notes/services/note_service.dart';
 
-class NoteLatestProvider extends ChangeNotifier{
+class NoteProvider extends ChangeNotifier{
   final NoteService _noteService;
 
-  NoteLatestProvider(this._noteService);
+  NoteProvider(this._noteService);
 
   bool _isLoading=false;
   bool get isLoading  => _isLoading;
@@ -32,6 +32,30 @@ class NoteLatestProvider extends ChangeNotifier{
       debugPrint("stack trace: $stackTrace");
       _errorMessage="Somethig went wrong";
     }finally {
+      _isLoading=false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool>createNotes({
+    required int leadId,
+    required String notes
+  })async{
+    try{
+      _isLoading=true;
+      _errorMessage=null;
+      notifyListeners();
+
+      await _noteService.createNotes(
+        leadId: leadId, 
+        notes: notes
+        );
+
+        return true;
+    }on ApiException catch(e){
+      _errorMessage=e.message;
+      return false;
+    }finally{
       _isLoading=false;
       notifyListeners();
     }

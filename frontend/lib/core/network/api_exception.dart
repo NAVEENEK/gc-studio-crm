@@ -38,6 +38,14 @@ class ApiException implements Exception {
         return const ApiException(message: "Request was cancelled");
 
       case DioExceptionType.unknown:
+        print('========== UNKNOWN DIO ERROR ==========');
+        print('Message: ${exception.message}');
+        print('Underlying error: ${exception.error}');
+        print('Request URL: ${exception.requestOptions.uri}');
+        print('Request data: ${exception.requestOptions.data}');
+        print('Response: ${exception.response?.data}');
+        print('=======================================');
+
         return const ApiException(message: "An unexpected error occurred");
       default:
         return const ApiException(message: "Something went wrong");

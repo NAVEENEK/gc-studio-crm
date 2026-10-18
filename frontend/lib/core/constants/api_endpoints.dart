@@ -7,5 +7,5 @@ class ApiEndpoints {
   static const String getLeadById="/leads/info";
   static const String getLatestNote="/notes/latest";
   static const String createFollowUp="/follow/create";
-  
+  static const String createNotes="/notes/create";
 }

@@ -3,7 +3,7 @@ import 'package:frontend/features/followups/providers/follow_up_provider.dart';
 import 'package:frontend/features/followups/ui/widget/lead_followups.dart';
 import 'package:frontend/features/leads/provider/lead_info_provider.dart';
 import 'package:frontend/features/leads/ui/widget/quick_action_lead.dart';
-import 'package:frontend/features/notes/widget/notes_card.dart';
+import 'package:frontend/features/notes/ui/widget/notes_card.dart';
 import 'package:frontend/features/leads/ui/widget/primary_info.dart';
 import 'package:frontend/shared/widgets/common_appbar.dart';
 import 'package:provider/provider.dart';

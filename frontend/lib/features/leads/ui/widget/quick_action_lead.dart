@@ -41,7 +41,12 @@ class QuickActionLead extends StatelessWidget {
                     title: "Add Notes", 
                     icon: Icons.note_add_outlined, 
                     onTap: (){
-
+                      context.push(
+                        AppRoutes.clientAddNotes,
+                        extra: {
+                          'leadId':leadId
+                        }
+                      );
                     }, 
                     color: Colors.blue
                     ),

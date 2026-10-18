@@ -6,6 +6,7 @@ import 'package:frontend/features/followups/ui/followups.dart';
 import 'package:frontend/features/followups/ui/followups_info.dart';
 import 'package:frontend/features/leads/ui/lead_info.dart';
 import 'package:frontend/features/leads/ui/leads.dart';
+import 'package:frontend/features/notes/ui/add_notes.dart';
 import 'package:frontend/features/profile/profile.dart';
 import 'package:frontend/features/settings/settings.dart';
 import 'package:frontend/features/splash/splash_screen.dart';
@@ -87,7 +88,17 @@ class AppRouter {
                 leadName: data['leadName'] as String,
                 );
             }
-          )
+          ),
+          GoRoute(
+            path: AppRoutes.clientAddNotes,
+            builder: (context,state){
+              final data=state.extra as Map<String,dynamic>;
+
+              return AddNote(
+                leadId:data['leadId'] as int
+              );
+            }
+            )
          /* GoRoute(
             path: AppRoutes.clientAddFollowUps,
             builder: (Context,State){
